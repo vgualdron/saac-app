@@ -1,5 +1,5 @@
 name: Build
-on: 
+on:
   push:
     branches:
       - master
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.18.1]
+        node-version: [18.20.5]
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
