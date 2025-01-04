@@ -3,7 +3,10 @@
 
 import { defineConfig } from '#q-app/wrappers'
 import { fileURLToPath } from 'node:url'
+import { config } from 'dotenv'
 
+// Cargar variables de entorno
+config()
 export default defineConfig((ctx) => {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -38,7 +41,7 @@ export default defineConfig((ctx) => {
       },
       env: {
         URL_API: ctx.dev ? process.env.URL_API : process.env.URL_API_PROD,
-        VUE_APP_LATEST_VERSION_APP: process.env.VUE_APP_LATEST_VERSION_APP,
+        LATEST_VERSION_APP: process.env.LATEST_VERSION_APP,
         URL_FILES: process.env.URL_FILES,
         APP_ID_ONE_SIGNAL: process.env.APP_ID_ONE_SIGNAL,
         URL_FRONT: process.env.URL_FRONT,
@@ -95,17 +98,22 @@ export default defineConfig((ctx) => {
     },
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
+      iconSet: 'material-icons', // Quasar icon set
+      lang: 'es', // Quasar language pack
       config: {},
-      // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
-      // For special cases outside of where the auto-import strategy can have an impact
+      // Possible values for "importStrategy":
+      // * 'auto' - (DEFAULT) Auto-import needed Quasar components & directives
+      // * 'all'  - Manually specify what to import
+      importStrategy: 'auto',
+      // For special cases outside of where "auto" importStrategy can have an impact
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
       // components: [],
       // directives: [],
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify', 'LocalStorage', 'Dialog', 'Loading'],
+      cssAddon: true,
     },
     // animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations

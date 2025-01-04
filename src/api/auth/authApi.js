@@ -8,7 +8,7 @@ export default {
     }),
   signIn: (data) =>
     http({
-      url: `https://micomercio.com.co/api-prestamos/public/index.php/api/auth/login`,
+      url: `${process.env.URL_API}/auth/login`,
       method: 'POST',
       data,
     }),

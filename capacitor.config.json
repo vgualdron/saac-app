@@ -1,0 +1,5 @@
+{
+  "appId": "com.saac.app",
+  "appName": "SaacApp",
+  "webDir": "dist/spa"
+}

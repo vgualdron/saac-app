@@ -1,12 +1,12 @@
-import { Notify } from 'quasar';
+import { Notify } from 'quasar'
 
 const showNotifications = (messages, status, position, timeout) => {
   messages.forEach((message) => {
     Notify.create({
-      message: message.text,
+      message: message.text || message,
       color: status === true ? 'green' : 'red',
       position,
-      caption: message.detail,
+      caption: message.detail || null,
       timeout,
       actions: [
         {
@@ -19,8 +19,8 @@ const showNotifications = (messages, status, position, timeout) => {
           handler: () => undefined,
         },
       ],
-    });
-  });
-};
+    })
+  })
+}
 
-export { showNotifications };
+export { showNotifications }

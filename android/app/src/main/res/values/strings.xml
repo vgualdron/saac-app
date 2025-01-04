@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SaacApp</string>
+    <string name="title_activity_main">SaacApp</string>
+    <string name="package_name">com.saac.app</string>
+    <string name="custom_url_scheme">com.saac.app</string>
+</resources>
