@@ -3,15 +3,17 @@ import authApi from '../api/auth/authApi'
 
 export const useCommonStore = defineStore('common', {
   persist: {
-    enabled: true, // Habilitar persistencia
+    enabled: true,
     strategies: [
       {
-        key: 'common', // Clave para guardar el estado en localStorage
-        storage: localStorage, // Puedes usar localStorage o sessionStorage
+        key: 'common',
+        storage: localStorage,
       },
     ],
   },
   state: () => ({
+    user: {},
+    isLoggedIn: false,
     status: false,
     responseMessages: [],
   }),
@@ -21,10 +23,22 @@ export const useCommonStore = defineStore('common', {
   actions: {
     async signIn(payload) {
       try {
-        this.status = await authApi.signIn(payload)
+        this.isLoggedIn = true
+        this.status = true
+        this.user = await authApi.signIn(payload)
       } catch (error) {
-        console.log(error)
-        this.status = error
+        if (error.message !== 'Network Error') {
+          this.isLoggedIn = false
+          this.status = false
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
       }
     },
   },

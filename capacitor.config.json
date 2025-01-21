@@ -1,5 +1,19 @@
 {
-  "appId": "com.saac.app",
-  "appName": "SaacApp",
-  "webDir": "dist/spa"
+  "appId": "com.coopserprog.app",
+  "appName": "Coopserprog",
+  "webDir": "dist/spa",
+  "hideSplashscreen": true,
+  "iosStatusBarPadding": true,
+  "electron": false,
+  "version": "1.0.1",
+  "android": {
+    "splashscreen": {
+      "icon": "/icons/icon.png"
+    }
+  },
+  "ios": {
+    "splashscreen": {
+      "icon": "/icons/icon.png"
+    }
+  }
 }

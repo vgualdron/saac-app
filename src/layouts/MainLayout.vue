@@ -4,22 +4,38 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> COOPSERPROG </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
+        <q-btn
+          color="primary"
+          label="Cerrar sesión"
+          push
+          size="sm"
+          class="q-mt-sm"
+          @click="logout()"
+          v-close-popup
+        />
       </q-toolbar>
     </q-header>
-
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <q-item-label header> Essential Links </q-item-label>
-
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
     <q-page-container>
       <router-view />
+      <div class="q-gutter-y-md" style="max-width: 600px; position: relative">
+        <div style="position: absolute; bottom: 0; width: 100%">
+          <q-tabs v-model="tab" dense class="bg-primary text-white">
+            <q-tab name="mails" icon="mail" label="Mails" />
+            <q-tab name="alarms" icon="alarm" label="Alarms" />
+            <q-tab name="movies" icon="movie" label="Movies" />
+          </q-tabs>
+        </div>
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -82,11 +98,15 @@ export default defineComponent({
     return {
       linksList,
       leftDrawerOpen: false,
+      tab: 'mails',
     }
   },
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
+    },
+    async logout() {
+      this.$router.push('/')
     },
   },
 })

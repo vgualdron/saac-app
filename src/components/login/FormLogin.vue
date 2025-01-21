@@ -9,16 +9,16 @@
         <q-card-section class="col-12">
           <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
             <q-input
-              outlined
-              v-model.trim="email"
-              label="Correo *"
-              type="email"
-              hint="Escriba su correo"
+              dense
+              v-model.trim="documentNumber"
+              label="Número de documento *"
+              hint="Escriba su número de documento"
+              type="number"
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
             <q-input
-              outlined
+              dense
               v-model.trim="password"
               label="Contraseña *"
               hint="Escriba la contraseña"
@@ -27,7 +27,7 @@
               :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
             <div class="row text-center">
-              <q-btn label="Entrar" type="submit" color="primary" class="col" />
+              <q-btn label="INICIAR SESION" type="submit" color="primary" class="col" rounded />
             </div>
           </q-form>
         </q-card-section>
@@ -36,58 +36,46 @@
     <p class="text-center">{{ versionApp }}</p>
   </div>
 </template>
-<script>
+<script setup>
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
 import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
 
-export default {
-  data() {
-    return {
-      email: null,
-      password: null,
-    }
-  },
-  computed: {
-    commonStore() {
-      return useCommonStore()
-    },
-    versionApp() {
-      return `Versión ${process.env.LATEST_VERSION_APP}`
-    },
-  },
-  created() {
-    this.validateLogin()
-  },
-  methods: {
-    showNotification(messages, status, align, timeout) {
-      showNotifications(messages, status, align, timeout)
-    },
-    async onSubmit() {
-      showLoading('Iniciando sesión ...', 'Por favor, espere', true)
-      const data = {
-        email: this.email,
-        password: this.password,
-      }
-      await this.commonStore.signIn(data)
-      if (this.commonStore.status && this.commonStore.status.status !== 200) {
-        this.showNotification([this.commonStore.status.message], false, 'bottom-right', 5000)
-        this.$q.loading.hide()
-      } else {
-        this.$q.loading.hide()
-        this.$router.push('/home')
-      }
-    },
-    onReset() {
-      this.email = null
-      this.password = null
-    },
-    validateLogin() {
-      /* if (localStorage.getItem('tokenMC')) {
-        this.$router.push('/home')
-      } */
-    },
-  },
+const commonStore = useCommonStore()
+const $q = useQuasar()
+const router = useRouter()
+
+const versionApp = computed(() => `Versión ${process.env.LATEST_VERSION_APP}`)
+
+const documentNumber = ref('')
+const password = ref('')
+
+const showNotification = (messages, status, align, timeout) => {
+  showNotifications(messages, status, align, timeout)
+}
+
+const onSubmit = async () => {
+  showLoading('Iniciando sesión ...', 'Por favor, espere', true)
+  const data = {
+    documentNumber: documentNumber.value,
+    password: password.value,
+  }
+  await commonStore.signIn(data)
+  if (!commonStore.status) {
+    showNotification(commonStore.responseMessages, false, 'bottom-right', 5000)
+    $q.loading.hide()
+  } else {
+    $q.loading.hide()
+    router.push('/home')
+  }
+}
+
+const onReset = () => {
+  documentNumber.value = ''
+  password.value = ''
 }
 </script>
 <style scoped>

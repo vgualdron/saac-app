@@ -1,8 +1,8 @@
 {
-  "name": "saac-app",
+  "name": "coopserprog-app",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Saac App",
+  "description": "A App Project",
+  "productName": "Coopserprog",
   "author": "vgualdron <victor.gualdron.r@gmail.com>",
   "type": "module",
   "private": true,

@@ -168,6 +168,21 @@ export default defineConfig((ctx) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
     capacitor: {
       hideSplashscreen: true,
+      iosStatusBarPadding: true,
+      electron: false,
+      appId: 'com.coopserprog.app',
+      appName: 'Coopserprog',
+      version: '1.0.1',
+      android: {
+        splashscreen: {
+          icon: '/icons/icon.png',
+        },
+      },
+      ios: {
+        splashscreen: {
+          icon: '/icons/icon.png',
+        },
+      },
     },
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
     electron: {
@@ -191,7 +206,7 @@ export default defineConfig((ctx) => {
       },
       builder: {
         // https://www.electron.build/configuration/configuration
-        appId: 'saac-app',
+        appId: 'coopserprog-app',
       },
     },
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex

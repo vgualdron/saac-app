@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title> Iniciar Sesión </q-toolbar-title>
+        <q-toolbar-title></q-toolbar-title>
         <div>COOPSERPROG</div>
       </q-toolbar>
     </q-header>
