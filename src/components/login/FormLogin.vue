@@ -29,6 +29,16 @@
             <div class="row text-center">
               <q-btn label="INICIAR SESION" type="submit" color="primary" class="col" rounded />
             </div>
+            <div class="row text-center">
+              <q-btn
+                label="REGISTRARSE"
+                color="primary"
+                class="col"
+                @click="register"
+                rounded
+                outline
+              />
+            </div>
           </q-form>
         </q-card-section>
       </q-card-section>
@@ -69,8 +79,19 @@ const onSubmit = async () => {
     $q.loading.hide()
   } else {
     $q.loading.hide()
+    const d = [
+      {
+        text: 'OK',
+        detail: commonStore.user,
+      },
+    ]
+    showNotification(d, commonStore.status, 'bottom-right', 5000)
     router.push('/home')
   }
+}
+
+const register = () => {
+  router.push('/register')
 }
 
 const onReset = () => {

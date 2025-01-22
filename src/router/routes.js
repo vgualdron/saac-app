@@ -2,7 +2,16 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/LoginLayout.vue'),
-    children: [{ path: '', name: 'Iniciar Sesión', component: () => import('pages/Login.vue') }],
+    children: [
+      { path: '', name: 'Iniciar Sesión', component: () => import('src/pages/LoginPage.vue') },
+    ],
+  },
+  {
+    path: '/register',
+    component: () => import('layouts/LoginLayout.vue'),
+    children: [
+      { path: '', name: 'Registrarse', component: () => import('src/pages/RegisterPage.vue') },
+    ],
   },
   {
     path: '/home',
@@ -10,7 +19,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/IndexPage.vue'),
+        component: () => import('src/pages/Index.vue'),
         meta: { requiresAuth: true },
       },
     ],

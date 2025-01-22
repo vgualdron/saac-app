@@ -4,14 +4,6 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import FormLogin from 'components/login/FormLogin.vue'
-
-export default {
-  name: 'PageLogin',
-  computed: {},
-  components: {
-    FormLogin,
-  },
-}
 </script>
