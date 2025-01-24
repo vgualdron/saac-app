@@ -7,29 +7,31 @@
       <q-separator />
       <q-card-section horizontal>
         <q-card-section class="col-12">
-          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-none">
             <q-input
               dense
-              v-model.trim="documentNumber"
+              rounded
+              outlined
+              v-model.trim="form.documentNumber"
               label="Número de documento *"
-              hint="Escriba su número de documento"
               type="number"
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
             <q-input
               dense
-              v-model.trim="password"
+              rounded
+              outlined
+              v-model.trim="form.password"
               label="Contraseña *"
-              hint="Escriba la contraseña"
               type="password"
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
-            <div class="row text-center">
+            <div class="row text-center q-mb-md">
               <q-btn label="INICIAR SESION" type="submit" color="primary" class="col" rounded />
             </div>
-            <div class="row text-center">
+            <div class="row text-center q-mt-sm">
               <q-btn
                 label="REGISTRARSE"
                 color="primary"
@@ -47,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
@@ -60,8 +62,12 @@ const router = useRouter()
 
 const versionApp = computed(() => `Versión ${process.env.LATEST_VERSION_APP}`)
 
-const documentNumber = ref('')
-const password = ref('')
+const initialFormState = {
+  documentNumber: '',
+  password: '',
+}
+
+const form = reactive({ ...initialFormState })
 
 const showNotification = (messages, status, align, timeout) => {
   showNotifications(messages, status, align, timeout)
@@ -69,25 +75,16 @@ const showNotification = (messages, status, align, timeout) => {
 
 const onSubmit = async () => {
   showLoading('Iniciando sesión ...', 'Por favor, espere', true)
-  const data = {
-    documentNumber: documentNumber.value,
-    password: password.value,
-  }
+  const data = { ...form }
+
   await commonStore.signIn(data)
-  if (!commonStore.status) {
-    showNotification(commonStore.responseMessages, false, 'bottom-right', 5000)
-    $q.loading.hide()
-  } else {
-    $q.loading.hide()
-    const d = [
-      {
-        text: 'OK',
-        detail: commonStore.user,
-      },
-    ]
-    showNotification(d, commonStore.status, 'bottom-right', 5000)
+
+  if (commonStore.status) {
     router.push('/home')
+  } else {
+    showNotification(commonStore.responseMessages, false, 'bottom-right', 5000)
   }
+  $q.loading.hide()
 }
 
 const register = () => {
@@ -95,8 +92,7 @@ const register = () => {
 }
 
 const onReset = () => {
-  documentNumber.value = ''
-  password.value = ''
+  Object.assign(form, initialFormState)
 }
 </script>
 <style scoped>

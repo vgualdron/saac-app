@@ -1,8 +1,8 @@
 {
-  "name": "coopserprog-app",
+  "name": "progress-app",
   "version": "0.0.1",
   "description": "A App Project",
-  "productName": "Coopserprog",
+  "productName": "Progress",
   "author": "vgualdron <victor.gualdron.r@gmail.com>",
   "type": "module",
   "private": true,

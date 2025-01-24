@@ -1,4 +1,4 @@
-package com.coopserprog.app;
+package com.progress.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,6 +1,6 @@
 {
-  "appId": "com.coopserprog.app",
-  "appName": "Coopserprog",
+  "appId": "com.progress.app",
+  "appName": "Progress",
   "webDir": "dist/spa",
   "hideSplashscreen": true,
   "iosStatusBarPadding": true,

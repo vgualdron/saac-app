@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title></q-toolbar-title>
-        <div>COOPSERPROG</div>
+        <div>PROGRESS</div>
       </q-toolbar>
     </q-header>
     <q-page-container>

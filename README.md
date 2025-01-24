@@ -1,4 +1,4 @@
-# coopserprog App (coopserprog-app)
+# progress App (progress-app)
 
 A Quasar Project
 

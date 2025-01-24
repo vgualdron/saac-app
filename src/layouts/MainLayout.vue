@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> COOPSERPROG </q-toolbar-title>
+        <q-toolbar-title> PROGRESS </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
         <q-btn

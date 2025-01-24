@@ -170,8 +170,8 @@ export default defineConfig((ctx) => {
       hideSplashscreen: true,
       iosStatusBarPadding: true,
       electron: false,
-      appId: 'com.coopserprog.app',
-      appName: 'Coopserprog',
+      appId: 'com.progress.app',
+      appName: 'Progress',
       version: '1.0.1',
       android: {
         splashscreen: {
@@ -206,7 +206,7 @@ export default defineConfig((ctx) => {
       },
       builder: {
         // https://www.electron.build/configuration/configuration
-        appId: 'coopserprog-app',
+        appId: 'progress-app',
       },
     },
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
