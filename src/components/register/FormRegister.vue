@@ -510,7 +510,7 @@
                   option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
+                  :rules="[(val) => val >= 0 || 'Obligatorio']"
                 >
                 </q-select>
               </div>
