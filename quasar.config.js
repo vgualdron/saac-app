@@ -170,6 +170,12 @@ export default defineConfig((ctx) => {
           { src: 'icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
         ],
       },
+      metaVariables: {
+        theme_color: '#65a30d', // El color que quieres para la barra de estado
+        background_color: '#ffffff', // El color de fondo del splash
+        appleMobileWebAppCapable: 'yes', // Para que funcione en iOS
+        appleMobileWebAppStatusBarStyle: 'black-translucent', // Cambia el estilo de la barra de estado en iOS
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
