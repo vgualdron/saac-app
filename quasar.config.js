@@ -151,6 +151,10 @@ export default defineConfig((ctx) => {
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
       workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      workboxOptions: {
+        skipWaiting: true, // Habilita para que el SW se actualice inmediatamente
+        clientsClaim: true, // Hace que el SW controle la app inmediatamente
+      },
       manifest: {
         name: 'Progress',
         short_name: 'Progress',
