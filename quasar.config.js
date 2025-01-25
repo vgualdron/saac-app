@@ -217,7 +217,7 @@ export default defineConfig((ctx) => {
       },
       builder: {
         // https://www.electron.build/configuration/configuration
-        appId: 'progress-app',
+        appId: 'progress',
       },
     },
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
