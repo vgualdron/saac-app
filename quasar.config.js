@@ -154,6 +154,18 @@ export default defineConfig((ctx) => {
       workboxOptions: {
         skipWaiting: true, // Habilita para que el SW se actualice inmediatamente
         clientsClaim: true, // Hace que el SW controle la app inmediatamente
+        runtimeCaching: [
+          {
+            urlPattern: '.*',
+            handler: 'NetworkFirst', // Siempre busca en la red primero
+            options: {
+              cacheName: 'dynamic-cache',
+              expiration: {
+                maxEntries: 50,
+              },
+            },
+          },
+        ],
       },
       manifest: {
         name: 'Progress',
