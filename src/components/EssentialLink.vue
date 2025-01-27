@@ -5,7 +5,7 @@
     @click="clickOption(link, title)"
     :class="classes"
     :active="active"
-    active-class="text-primary"
+    active-class="text-primary bg-accent"
   >
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />

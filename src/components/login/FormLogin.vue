@@ -49,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
@@ -94,6 +94,15 @@ const register = () => {
 const onReset = () => {
   Object.assign(form, initialFormState)
 }
+
+onMounted(async () => {
+  if (commonStore.isLoggedIn) {
+    console.log('isLoggedIn!')
+    router.push('/home')
+  } else {
+    console.log('notLoggedIn!')
+  }
+})
 </script>
 <style scoped>
 .my-card {

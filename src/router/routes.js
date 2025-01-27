@@ -14,12 +14,34 @@ const routes = [
     ],
   },
   {
+    path: '/logout',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/LogoutPage.vue'),
+        meta: { requiresAuth: true },
+      },
+    ],
+  },
+  {
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
         component: () => import('src/pages/Index.vue'),
+        meta: { requiresAuth: true },
+      },
+    ],
+  },
+  {
+    path: '/simulator',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/SimulatorPage.vue'),
         meta: { requiresAuth: true },
       },
     ],

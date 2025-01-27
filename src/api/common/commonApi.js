@@ -39,4 +39,9 @@ export default {
       url: `${process.env.URL_API}/city`,
       method: 'GET',
     }),
+  getCreditLines: () =>
+    http({
+      url: `${process.env.URL_API}/credit-line`,
+      method: 'GET',
+    }),
 }

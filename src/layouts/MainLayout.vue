@@ -87,7 +87,7 @@ const linksL = [
     caption: 'Haz click para cerrar sesión',
     icon: 'power_settings_new',
     link: '/logout',
-    classes: 'text-red bg-grey-4 text-bold',
+    classes: 'text-red text-bold',
   },
 ]
 

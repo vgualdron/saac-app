@@ -17,6 +17,9 @@ export const useCollectionStore = defineStore('collection', {
     responseMessages: [],
   }),
   getters: {},
+  resetStore() {
+    this.$reset()
+  },
   actions: {
     async getCollections(document) {
       try {

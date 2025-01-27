@@ -1,5 +1,25 @@
 <template>
   <div class="q-pa-md">
+    <div class="col-7 q-pl-sm text-center">
+      <q-select
+        dense
+        rounded
+        outlined
+        map-options
+        transition-show="flip-up"
+        transition-hide="flip-down"
+        v-model="form.creditLine"
+        label="Línea de crédito *"
+        input-debounce="0"
+        :options="optionsCreditLines"
+        option-value="id"
+        option-label="name"
+        behavior="menu"
+        reactive-rules
+        :rules="[(val) => val || 'Obligatorio']"
+      >
+      </q-select>
+    </div>
     <q-table
       class="my-sticky-dynamic"
       flat
@@ -15,14 +35,12 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, reactive } from 'vue'
 import { useQuasar } from 'quasar'
-import { useCollectionStore } from '../../stores/collection'
 import { useCommonStore } from '../../stores/common'
 // import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
 
-const collectionStore = useCollectionStore()
 const commonStore = useCommonStore()
 const $q = useQuasar()
 
@@ -31,19 +49,24 @@ const pagination = ref({
   rowsPerPage: 1000,
 })
 
+const initialFormState = {
+  creditLine: 1,
+}
+const form = reactive({ ...initialFormState })
+
+const optionsCreditLines = computed(() => {
+  return commonStore.creditLines
+})
+
 onMounted(async () => {
   loading.value = true
   showLoading('Cargando ...', 'Por favor, espere', true)
-  let document = ''
-  if (commonStore.user && commonStore.user.data && commonStore.user.data.user) {
-    document = commonStore.user.data.user.document
-  }
-  await collectionStore.getCollections(document)
+  await commonStore.getCreditLines()
   $q.loading.hide()
   loading.value = false
 })
 
-const rows = computed(() => collectionStore.collections)
+const rows = computed(() => commonStore.creditLines)
 
 const columns = [
   {

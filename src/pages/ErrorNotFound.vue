@@ -14,8 +14,8 @@
         color="white"
         text-color="blue"
         unelevated
-        to="/"
-        label="Go Home"
+        to="/home"
+        label="Inicio"
         no-caps
       />
     </div>
