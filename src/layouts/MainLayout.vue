@@ -30,7 +30,7 @@
 
     <q-page-container>
       <router-view />
-      <div class="q-gutter-y-md" style="max-width: 600px; position: relative">
+      <div class="" style="position: relative">
         <div style="position: absolute; bottom: 0; width: 100%">
           <q-tabs v-model="tab" dense class="bg-primary text-white">
             <q-tab name="mails" icon="mail" label="Mails" />
