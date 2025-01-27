@@ -6,7 +6,7 @@
 
         <q-toolbar-title> PROGRESS </q-toolbar-title>
 
-        <div>{{ versionApp }}</div>
+        <div>{{ nameUser }}</div>
       </q-toolbar>
     </q-header>
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
@@ -25,6 +25,9 @@
           :clickable="link !== $route.path"
           :active="link === $route.path"
         />
+        <q-item-label header class="text-grey-8 text-center q-mt-md">
+          {{ versionApp }}
+        </q-item-label>
       </q-list>
     </q-drawer>
 
@@ -32,7 +35,14 @@
       <router-view />
       <div class="" style="position: relative">
         <div style="position: absolute; bottom: 0; width: 100%">
-          <q-tabs v-model="tab" dense class="bg-primary text-white">
+          <q-tabs
+            v-model="tab"
+            dense
+            switch-indicator
+            class="bg-primary text-white text-grey-5 shadow-2"
+            indicator-color="white"
+            active-color="white"
+          >
             <q-tab name="mails" icon="mail" label="Mails" />
             <q-tab name="alarms" icon="alarm" label="Alarms" />
             <q-tab name="movies" icon="movie" label="Movies" />
@@ -43,11 +53,14 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { computed, ref } from 'vue'
+import { useCommonStore } from '../stores/common'
 import EssentialLink from 'components/EssentialLink.vue'
 
-const linksList = [
+const commonStore = useCommonStore()
+
+const linksL = [
   {
     title: 'Estado de cuenta',
     caption: 'Revisa tu estado de cuenta',
@@ -78,30 +91,20 @@ const linksList = [
   },
 ]
 
-export default defineComponent({
-  name: 'MainLayout',
-  components: {
-    EssentialLink,
-  },
-  computed: {
-    versionApp() {
-      return `Version ${process.env.LATEST_VERSION_APP}`
-    },
-  },
-  data() {
-    return {
-      linksList,
-      leftDrawerOpen: false,
-      tab: 'mails',
-    }
-  },
-  methods: {
-    toggleLeftDrawer() {
-      this.leftDrawerOpen = !this.leftDrawerOpen
-    },
-    async logout() {
-      this.$router.push('/')
-    },
-  },
+const linksList = ref(linksL)
+const leftDrawerOpen = ref(false)
+const tab = ref('mails')
+
+const versionApp = computed(() => `Version ${process.env.LATEST_VERSION_APP}`)
+const nameUser = computed(() => {
+  let name = ''
+  if (commonStore.user && commonStore.user.data && commonStore.user.data.user) {
+    name = commonStore.user.data.user.name
+  }
+  return name
 })
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 </script>
