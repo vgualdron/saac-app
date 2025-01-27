@@ -1,14 +1,13 @@
 <template>
   <q-item
-    clickable
+    :clickable="clickable"
     tag="a"
-    target="_blank"
-    :href="link"
+    @click="clickOption(link, title)"
+    :class="classes"
+    :active="active"
+    active-class="text-primary"
   >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
+    <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
 
@@ -19,31 +18,44 @@
   </q-item>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'EssentialLink',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
+const router = useRouter()
 
-    caption: {
-      type: String,
-      default: ''
-    },
-
-    link: {
-      type: String,
-      default: '#'
-    },
-
-    icon: {
-      type: String,
-      default: ''
-    }
-  }
+defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  caption: {
+    type: String,
+    default: '',
+  },
+  link: {
+    type: String,
+    default: '#',
+  },
+  icon: {
+    type: String,
+    default: '',
+  },
+  classes: {
+    type: String,
+    default: '',
+  },
+  clickable: {
+    type: Boolean,
+    default: true,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const clickOption = (link) => {
+  console.log(link)
+  router.push(link)
+}
 </script>

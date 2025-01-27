@@ -24,7 +24,17 @@ const routes = [
       },
     ],
   },
-
+  {
+    path: '/collections',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/CollectionsPage.vue'),
+        meta: { requiresAuth: true },
+      },
+    ],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

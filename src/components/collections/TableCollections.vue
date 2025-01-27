@@ -1,0 +1,94 @@
+<template>
+  <div class="q-pa-md">
+    <q-table
+      class="my-sticky-dynamic"
+      flat
+      bordered
+      title="Recaudos"
+      :rows="rows"
+      :columns="columns"
+      :loading="loading"
+      row-key="index"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
+    />
+  </div>
+</template>
+<script setup>
+import { computed, onMounted, ref } from 'vue'
+import { useQuasar } from 'quasar'
+import { useCollectionStore } from '../../stores/collection'
+import { useCommonStore } from '../../stores/common'
+// import { showNotifications } from '../../helpers/showNotifications'
+import { showLoading } from '../../helpers/showLoading'
+
+const collectionStore = useCollectionStore()
+const commonStore = useCommonStore()
+const $q = useQuasar()
+
+const loading = ref(false)
+const pagination = ref({
+  rowsPerPage: 1000,
+})
+
+onMounted(async () => {
+  loading.value = true
+  showLoading('Cargando ...', 'Por favor, espere', true)
+  let document = ''
+  if (commonStore.user && commonStore.user.data && commonStore.user.data.user) {
+    document = commonStore.user.data.user.document
+  }
+  await collectionStore.getCollections(document)
+  $q.loading.hide()
+  loading.value = false
+})
+
+const rows = computed(() => collectionStore.collections)
+
+const columns = [
+  {
+    name: 'index',
+    label: '#',
+    field: 'index',
+    align: 'left',
+  },
+  {
+    name: 'period_name',
+    required: true,
+    label: 'Periodo',
+    align: 'left',
+    field: (row) => row.period_name,
+    format: (val) => val,
+    sortable: true,
+  },
+  {
+    name: 'date',
+    required: true,
+    label: 'Fecha',
+    align: 'left',
+    field: (row) => row.date,
+    format: (val) => {
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
+      return new Date(val).toLocaleDateString('es-ES', options)
+    },
+    sortable: true,
+  },
+  {
+    name: 'amount',
+    required: true,
+    label: 'Valor',
+    align: 'left',
+    field: (row) => row.amount,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+]
+</script>
+<style scoped></style>

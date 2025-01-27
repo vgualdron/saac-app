@@ -6,22 +6,25 @@
 
         <q-toolbar-title> PROGRESS </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
-        <q-btn
-          color="primary"
-          label="Cerrar sesión"
-          push
-          size="sm"
-          class="q-mt-sm"
-          @click="logout()"
-          v-close-popup
-        />
+        <div>{{ versionApp }}</div>
       </q-toolbar>
     </q-header>
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+        <q-item-label header class="text-grey-8">
+          <img src="~/assets/logo-rectangle.png" width="260" class="q-mr-auto q-ml-auto" />
+        </q-item-label>
+        <EssentialLink
+          v-for="{ name, link, title, icon, caption, classes } in linksList"
+          :key="name"
+          :title="title"
+          :link="link"
+          :icon="icon"
+          :caption="caption"
+          :classes="classes"
+          :clickable="link !== $route.path"
+          :active="link === $route.path"
+        />
       </q-list>
     </q-drawer>
 
@@ -46,46 +49,32 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
+    title: 'Estado de cuenta',
+    caption: 'Revisa tu estado de cuenta',
+    icon: 'request_quote',
+    link: '/statement',
+    classes: '',
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
+    title: 'Simular crédito',
+    caption: 'Simula tu crédito',
+    icon: 'calculate',
+    link: '/simulator',
+    classes: '',
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
+    title: 'Recaudos',
+    caption: 'Revisa tus recuados',
+    icon: 'paid',
+    link: '/collections',
+    classes: '',
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
+    title: 'Salir',
+    caption: 'Haz click para cerrar sesión',
+    icon: 'power_settings_new',
+    link: '/logout',
+    classes: 'text-red bg-grey-4 text-bold',
   },
 ]
 
@@ -93,6 +82,11 @@ export default defineComponent({
   name: 'MainLayout',
   components: {
     EssentialLink,
+  },
+  computed: {
+    versionApp() {
+      return `Version ${process.env.LATEST_VERSION_APP}`
+    },
   },
   data() {
     return {
