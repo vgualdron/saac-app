@@ -32,20 +32,24 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
     // Cuando el usuario haga clic en el botón de instalación
     installButton.addEventListener('click', () => {
-      // Mostrar el mensaje de instalación
-      deferredPrompt.prompt()
-      // Esperar la respuesta del usuario
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('El usuario aceptó la instalación')
-        } else {
-          console.log('El usuario rechazó la instalación')
-        }
-        // Ocultar el botón después de la acción (instalación aceptada o rechazada)
-        installButton.style.display = 'none'
-        // Resetear deferredPrompt para que no se use más de una vez
-        deferredPrompt = null
-      })
+      // Asegúrate de que deferredPrompt no sea null antes de llamar a prompt()
+      if (deferredPrompt) {
+        // Mostrar el mensaje de instalación
+        deferredPrompt.prompt()
+
+        // Esperar la respuesta del usuario
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('El usuario aceptó la instalación')
+          } else {
+            console.log('El usuario rechazó la instalación')
+          }
+          // Ocultar el botón después de la acción (instalación aceptada o rechazada)
+          installButton.style.display = 'none'
+          // Resetear deferredPrompt para que no se use más de una vez
+          deferredPrompt = null
+        })
+      }
     })
   }
 })

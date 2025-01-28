@@ -4,6 +4,7 @@
       <q-toolbar>
         <q-toolbar-title></q-toolbar-title>
         <div>PROGRESS</div>
+        <button id="installButton" style="display: none">Instalar</button>
       </q-toolbar>
     </q-header>
     <q-page-container>
