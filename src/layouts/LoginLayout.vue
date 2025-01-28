@@ -4,13 +4,14 @@
       <q-toolbar>
         <q-toolbar-title></q-toolbar-title>
         <q-btn
-          color="primary"
+          color="white"
           label="Instalar App"
           icon="download"
           size="sm"
           id="installButton"
-          style="display: block"
+          style="display: none"
           class="q-my-md"
+          outline
         />
       </q-toolbar>
     </q-header>
