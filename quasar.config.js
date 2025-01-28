@@ -84,18 +84,6 @@ export default defineConfig((ctx) => {
       workboxOptions: {
         skipWaiting: true, // Habilita para que el SW se actualice inmediatamente
         clientsClaim: true, // Hace que el SW controle la app inmediatamente
-        runtimeCaching: [
-          {
-            urlPattern: '.*',
-            handler: 'NetworkFirst', // Siempre busca en la red primero
-            options: {
-              cacheName: 'dynamic-cache',
-              expiration: {
-                maxEntries: 50,
-              },
-            },
-          },
-        ],
       },
       manifest: {
         name: 'Progress',
@@ -114,6 +102,23 @@ export default defineConfig((ctx) => {
           { src: 'icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/icon-384x384.png', sizes: '384x384', type: 'image/png' },
           { src: 'icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+        ],
+        screenshots: [
+          {
+            src: 'screenshots/screenshot-360x640.png', // Ruta a la imagen
+            sizes: '360x640', // Tamaño de la imagen
+            type: 'image/png', // Tipo de la imagen
+          },
+          {
+            src: 'screenshots/screenshot-768x1280.png',
+            sizes: '768x1280',
+            type: 'image/png',
+          },
+          {
+            src: 'screenshots/screenshot-1280x1920.png',
+            sizes: '1280x1920',
+            type: 'image/png',
+          },
         ],
       },
       metaVariables: {
