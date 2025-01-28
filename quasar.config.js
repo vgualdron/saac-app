@@ -91,8 +91,8 @@ export default defineConfig((ctx) => {
         description: 'An amazing PWA built with Quasar Framework',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff', // Fondo de la pantalla de carga
-        theme_color: '#65a30d', // Cambia aquí el color de la barra superior
+        background_color: '#ffffff',
+        theme_color: '#65a30d',
         icons: [
           { src: 'icons/icon-72x72.png', sizes: '72x72', type: 'image/png' },
           { src: 'icons/icon-96x96.png', sizes: '96x96', type: 'image/png' },
