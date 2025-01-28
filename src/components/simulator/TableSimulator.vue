@@ -206,9 +206,8 @@ const fees = computed(() => {
     let totalSeguroCredito = 0
     let totalValorCuota = 0
 
-    let fechaPago = moment()
     for (var i = 1; i <= plazo; i++) {
-      fechaPago = fechaPago.add(1, 'month')
+      let fechaPago = moment().add(i, 'month')
 
       var interesPagado = saldoCredito * interesMensual
 
