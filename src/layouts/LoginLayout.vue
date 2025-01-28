@@ -3,8 +3,15 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title></q-toolbar-title>
-        <div>PROGRESS</div>
-        <button id="installButton" style="display: none">Instalar</button>
+        <q-btn
+          color="primary"
+          label="Instalar App"
+          icon="download"
+          size="sm"
+          id="installButton"
+          style="display: block"
+          class="q-my-md"
+        />
       </q-toolbar>
     </q-header>
     <q-page-container>
