@@ -59,6 +59,13 @@ import EssentialLink from 'components/EssentialLink.vue'
 const commonStore = useCommonStore()
 
 const linksL = [
+  {
+    title: 'Inicio',
+    caption: 'Ir al inicio de la app',
+    icon: 'home',
+    link: '/home',
+    classes: '',
+  },
   /* {
     title: 'Estado de cuenta',
     caption: 'Revisa tu estado de cuenta',

@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md q-mb-xl">
     <q-table
       class="my-sticky-dynamic"
       flat

@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md q-mb-xl">
     <div class="row">
       <div class="col-12 q-pl-none text-center">
         <q-select

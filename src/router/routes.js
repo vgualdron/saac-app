@@ -30,8 +30,11 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('src/pages/Index.vue'),
-        meta: { requiresAuth: true },
+        component: () => import('src/pages/HomePage.vue'),
+        meta: {
+          name: 'Inicio',
+          requiresAuth: true,
+        },
       },
     ],
   },
@@ -43,7 +46,7 @@ const routes = [
         path: '',
         component: () => import('src/pages/SimulatorPage.vue'),
         meta: {
-          name: 'Sumular crédito',
+          name: 'Simular crédito',
           requiresAuth: true,
         },
       },
