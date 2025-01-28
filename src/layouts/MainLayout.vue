@@ -4,7 +4,9 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> PROGRESS </q-toolbar-title>
+        <q-toolbar-title>
+          {{ $route.meta.name }}
+        </q-toolbar-title>
 
         <div>{{ nameUser }}</div>
       </q-toolbar>

@@ -4,7 +4,6 @@
       class="my-sticky-dynamic"
       flat
       bordered
-      title="Recaudos"
       :rows="rows"
       :columns="columns"
       :loading="loading"

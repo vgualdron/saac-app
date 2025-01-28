@@ -42,7 +42,10 @@ const routes = [
       {
         path: '',
         component: () => import('src/pages/SimulatorPage.vue'),
-        meta: { requiresAuth: true },
+        meta: {
+          name: 'Sumular crédito',
+          requiresAuth: true,
+        },
       },
     ],
   },
@@ -53,7 +56,10 @@ const routes = [
       {
         path: '',
         component: () => import('src/pages/CollectionsPage.vue'),
-        meta: { requiresAuth: true },
+        meta: {
+          name: 'Recaudos',
+          requiresAuth: true,
+        },
       },
     ],
   },
