@@ -33,22 +33,18 @@
 
     <q-page-container>
       <router-view />
-      <div class="" style="position: relative">
-        <div style="position: absolute; bottom: 0; width: 100%">
-          <q-tabs
-            v-model="tab"
-            dense
-            switch-indicator
-            class="bg-primary text-white text-grey-5 shadow-2"
-            indicator-color="white"
-            active-color="white"
-          >
-            <q-tab name="mails" icon="mail" label="Mails" />
-            <q-tab name="alarms" icon="alarm" label="Alarms" />
-            <q-tab name="movies" icon="movie" label="Movies" />
-          </q-tabs>
-        </div>
-      </div>
+      <q-tabs
+        v-model="tab"
+        dense
+        switch-indicator
+        class="bg-primary text-white text-grey-5 shadow-2 fixed-bottom"
+        indicator-color="white"
+        active-color="white"
+      >
+        <q-tab name="mails" icon="mail" label="Mails" />
+        <q-tab name="alarms" icon="alarm" label="Alarms" />
+        <q-tab name="movies" icon="movie" label="Movies" />
+      </q-tabs>
     </q-page-container>
   </q-layout>
 </template>
