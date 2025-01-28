@@ -30,18 +30,6 @@
         <q-item-label header class="text-grey-8 text-center q-mt-md">
           {{ versionApp }}
         </q-item-label>
-        <q-item-label header class="text-grey-8 text-center q-mt-md">
-          <q-btn
-            color="white"
-            label="Instalar App"
-            icon="download"
-            size="sm"
-            id="installButton"
-            style="display: none"
-            class="q-my-md"
-            outline
-          />
-        </q-item-label>
       </q-list>
     </q-drawer>
 
