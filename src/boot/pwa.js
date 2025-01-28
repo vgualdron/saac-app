@@ -25,14 +25,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
   // Guardar el evento para mostrar el mensaje más tarde
   deferredPrompt = e
 
-  // Mostrar el botón de instalación
+  // Mostrar el botón de instalación solo si el evento ha sido disparado
   const installButton = document.getElementById('installButton')
   if (installButton) {
     installButton.style.display = 'block' // Hacer visible el botón de instalación
-  }
 
-  // Cuando el usuario haga clic en el botón de instalación
-  if (installButton) {
+    // Cuando el usuario haga clic en el botón de instalación
     installButton.addEventListener('click', () => {
       // Mostrar el mensaje de instalación
       deferredPrompt.prompt()
@@ -43,8 +41,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
         } else {
           console.log('El usuario rechazó la instalación')
         }
-        // Ocultar el botón después de la acción
+        // Ocultar el botón después de la acción (instalación aceptada o rechazada)
         installButton.style.display = 'none'
+        // Resetear deferredPrompt para que no se use más de una vez
+        deferredPrompt = null
       })
     })
   }
