@@ -5,7 +5,6 @@
   "productName": "Progress",
   "author": "vgualdron <victor.gualdron.r@gmail.com>",
   "type": "module",
-  "theme_color": "#65a30d",
   "private": true,
   "scripts": {
     "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{js,cjs,mjs,vue}\"",
