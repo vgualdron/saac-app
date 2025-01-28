@@ -59,13 +59,13 @@ import EssentialLink from 'components/EssentialLink.vue'
 const commonStore = useCommonStore()
 
 const linksL = [
-  {
+  /* {
     title: 'Estado de cuenta',
     caption: 'Revisa tu estado de cuenta',
     icon: 'request_quote',
     link: '/statement',
     classes: '',
-  },
+  }, */
   {
     title: 'Simular crédito',
     caption: 'Simula tu crédito',
