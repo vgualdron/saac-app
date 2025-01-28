@@ -1,7 +1,7 @@
 {
   "name": "progress",
   "version": "0.0.1",
-  "description": "An amazing PWA built with Quasar Framework",
+  "description": "Es una aplicación de la cooperativa COOPSERPRO",
   "productName": "Progress",
   "author": "vgualdron <victor.gualdron.r@gmail.com>",
   "type": "module",
