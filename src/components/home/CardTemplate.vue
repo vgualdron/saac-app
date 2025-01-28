@@ -2,7 +2,7 @@
   <q-page class="flex flex-center q-mb-md">
     <div class="column items-center">
       <canvas ref="canvas" width="350" height="500"></canvas>
-      <q-btn color="primary" label="Descargar Carnet" @click="download" class="q-mt-md" />
+      <q-btn color="primary" label="Descargar Carnet" @click="download" class="q-my-md" />
     </div>
   </q-page>
 </template>
