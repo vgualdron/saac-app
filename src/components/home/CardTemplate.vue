@@ -2,7 +2,7 @@
   <q-page class="flex flex-center q-mb-md">
     <div class="column items-center">
       <canvas ref="canvas" width="350" height="500"></canvas>
-      <q-btn color="primary" label="Descargar Carnet" @click="download" class="q-my-md" />
+      <!-- <q-btn color="primary" label="Descargar Carnet" @click="download" class="q-my-md" /> -->
     </div>
   </q-page>
 </template>
@@ -119,7 +119,7 @@ const getWrappedText = (ctx, text, maxWidth) => {
   return lines
 }
 
-const download = () => {
+/* const download = () => {
   if (canvas.value) {
     const link = document.createElement('a')
     link.href = canvas.value.toDataURL('image/png')
@@ -128,7 +128,7 @@ const download = () => {
   } else {
     console.error('Canvas no disponible')
   }
-}
+} */
 
 onMounted(generate)
 </script>
