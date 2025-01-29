@@ -7,8 +7,40 @@
         <q-toolbar-title>
           {{ $route.meta.name }}
         </q-toolbar-title>
-
-        <div>{{ nameUser }}</div>
+        <q-btn-dropdown
+          color="white"
+          class="no-shadow"
+          push
+          no-caps
+          :label="truncateText(user.name, 10)"
+          outline
+        >
+          <div class="row no-wrap q-pa-md">
+            <div class="column items-center">
+              <q-avatar size="200px">
+                <upload-image-profile
+                  :config="{
+                    name: 'FOTO_PROFILE',
+                    storage: 'users',
+                    modelName: 'users',
+                    modelId: user.user_id,
+                  }"
+                />
+              </q-avatar>
+              <div class="text-subtitle1 q-mt-xs text-weight-bolder text-center">
+                {{ user.name }}
+              </div>
+              <!-- <q-btn
+                color="primary"
+                label="Cambiar contraseña"
+                push
+                size="sm"
+                v-close-popup
+                @click="showChangePasswordForm()"
+              /> -->
+            </div>
+          </div>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
@@ -55,6 +87,7 @@
 import { computed, ref } from 'vue'
 import { useCommonStore } from '../stores/common'
 import EssentialLink from 'components/EssentialLink.vue'
+import UploadImageProfile from 'components/common/UploadImageProfile.vue'
 
 const commonStore = useCommonStore()
 
@@ -101,13 +134,19 @@ const leftDrawerOpen = ref(false)
 const tab = ref('mails')
 
 const versionApp = computed(() => `Version ${process.env.LATEST_VERSION_APP}`)
-const nameUser = computed(() => {
-  let name = ''
+
+const user = computed(() => {
+  let u = {}
   if (commonStore.user && commonStore.user.data && commonStore.user.data.user) {
-    name = commonStore.user.data.user.name
+    u = commonStore.user.data.user
   }
-  return name
+  return u
 })
+
+const truncateText = (text, maxLength) => {
+  if (!text) return ''
+  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
+}
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value

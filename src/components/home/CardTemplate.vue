@@ -16,58 +16,119 @@ const commonStore = useCommonStore()
 const canvas = ref(null)
 
 const generate = async () => {
-  let user = {}
-  if (commonStore.user && commonStore.user.data && commonStore.user.data.user) {
-    user = commonStore.user.data.user
-  }
+  let user = commonStore.user?.data?.user || {}
+
   const client = {
-    name: user.name,
-    document: user.document,
-    type_document: user.type_document,
-    qr: `${process.env.URL_API}/validate-card/${user.document}`,
+    name: user.name || 'Usuario Desconocido',
+    document: user.document || 'N/A',
+    type_document: user.type_document || '',
+    qr: `${process.env.URL_API}/validate-card/${user.document || ''}`,
+    photo: user.user_url_photo_proile
+      ? `${process.env.URL_FILES}${user.user_url_photo_proile}`
+      : new URL('/default-photo.png', import.meta.url).href, // Imagen por defecto
   }
 
   const ctx = canvas.value.getContext('2d')
-  const img = new Image()
+  const templateImg = new Image()
+  templateImg.src = new URL('/card-template.png', import.meta.url).href
+  const logoImg = new Image() // Nueva imagen para el logo
+  logoImg.src = new URL('/logo-rectangle.png', import.meta.url).href // Ruta del logo
 
-  // Ruta correcta de la imagen (ajustar según la ubicación de tu imagen)
-  img.src = new URL('/card-template.png', import.meta.url).href
-
-  img.onerror = () => {
-    console.error('Error al cargar la imagen')
+  templateImg.onerror = () => {
+    console.error('Error al cargar la imagen de plantilla')
   }
 
-  // Espera a que la imagen se cargue antes de dibujar
-  img.onload = async () => {
-    ctx.clearRect(0, 0, 350, 500) // Borrar cualquier dibujo anterior
-    ctx.drawImage(img, 0, 0, 350, 500) // Dibuja la imagen base
+  templateImg.onload = async () => {
+    ctx.clearRect(0, 0, 350, 500) // Limpiar el canvas
+    ctx.drawImage(templateImg, 0, 0, 350, 500) // Dibujar la plantilla
 
-    // Estilo del texto (negrita)
-    ctx.fillStyle = 'black' // Texto en negro
-    ctx.font = 'bold 18px Arial' // Texto en negrita
-    ctx.textAlign = 'center' // Centra el texto
+    // Cargar y dibujar el logo
+    logoImg.onload = () => {
+      const logoWidth = 2238
+      const logoHeight = 753
+      const scale = Math.min(160 / logoWidth, 310 / logoHeight) // Ajuste proporcional
 
-    // Posición y dibujo del texto
-    ctx.fillText(`${client.name.toUpperCase()}`, 175, 380) // Centrado horizontal
-    ctx.fillText(`${client.type_document} ${client.document}`, 175, 410) // Centrado horizontal
+      const logoSizeWidth = logoWidth * scale
+      const logoSizeHeight = logoHeight * scale
 
-    // Generar QR más grande y dibujarlo en el canvas
+      ctx.drawImage(logoImg, (350 - logoSizeWidth) / 2, 60, logoSizeWidth, logoSizeHeight) // Ajuste al tamaño de la plantilla
+
+      // Dibujar el texto "ASOCIADO COOPSERPROG" más abajo
+      ctx.fillStyle = 'black'
+      ctx.font = 'bold 16px "Open Sans", sans-serif' // Fuente Open Sans
+      ctx.textAlign = 'center'
+      ctx.fillText('ASOCIADO COOPSERPROG', 175, 80 + logoSizeHeight) // Ubicación del texto más abajo
+    }
+
+    // Cargar y dibujar la foto del usuario
+    const userImg = new Image()
+    userImg.src = client.photo
+    userImg.onerror = () => {
+      console.error('Error al cargar la foto del usuario')
+    }
+
+    userImg.onload = () => {
+      const imgSize = 140 // Tamaño de la foto
+      ctx.drawImage(userImg, 105, 20 + (logoImg.height / 350) * 60, imgSize, imgSize) // Foto más arriba (Y=130) ajustada
+    }
+
+    // Dibujar el texto del nombre con mayor separación de la foto
+    ctx.fillStyle = 'black'
+    ctx.font = 'bold 18px "Open Sans", sans-serif' // Fuente Open Sans
+    ctx.textAlign = 'center'
+
+    const maxWidth = 280 // Máximo ancho antes de hacer salto de línea
+    const lineHeight = 22
+    const nameLines = getWrappedText(ctx, client.name.toUpperCase(), maxWidth)
+
+    // Ajustar la posición del nombre
+    nameLines.forEach((line, index) => {
+      ctx.fillText(line, 175, 320 + index * lineHeight) // Más espacio entre foto y nombre
+    })
+
+    // Dibujar el documento debajo del nombre
+    ctx.font = 'bold 16px "Open Sans", sans-serif' // Fuente Open Sans
+    ctx.fillText(`${client.type_document} ${client.document}`, 175, 360)
+
+    // Dibujar el QR más arriba pero con separación
     const qrCanvas = document.createElement('canvas')
-    await QrCode.toCanvas(qrCanvas, client.qr, { width: 200 }) // Ajustar el tamaño del QR a 200px
-
-    const qrWidth = 200 // Ancho del QR
-    const qrX = (350 - qrWidth) / 2 // Calcular la posición X para centrar el QR
-    ctx.drawImage(qrCanvas, qrX, 150) // Centrar el QR en el canvas (más grande)
+    await QrCode.toCanvas(qrCanvas, client.qr, { width: 100 }) // QR más pequeño
+    ctx.drawImage(qrCanvas, 125, 370, 100, 100) // QR más arriba (Y=370) pero con separación
   }
+}
+
+// Función para dividir el texto en múltiples líneas si es muy largo
+const getWrappedText = (ctx, text, maxWidth) => {
+  const words = text.split(' ')
+  let line = ''
+  const lines = []
+
+  words.forEach((word) => {
+    const testLine = line ? `${line} ${word}` : word
+    const metrics = ctx.measureText(testLine)
+
+    if (metrics.width > maxWidth && line) {
+      lines.push(line)
+      line = word
+    } else {
+      line = testLine
+    }
+  })
+
+  if (line) lines.push(line)
+  return lines
 }
 
 const download = () => {
-  const link = document.createElement('a')
-  link.href = canvas.value.toDataURL('image/png')
-  link.download = 'carnet.png'
-  link.click()
+  if (canvas.value) {
+    const link = document.createElement('a')
+    link.href = canvas.value.toDataURL('image/png')
+    link.download = 'carnet.png'
+    link.click()
+  } else {
+    console.error('Canvas no disponible')
+  }
 }
 
-// Genera el carnet al cargar la página
 onMounted(generate)
 </script>
