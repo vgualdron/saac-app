@@ -47,7 +47,7 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <q-item-label header class="text-grey-8">
-          <img src="~/assets/logo-rectangle.png" width="260" class="q-mr-auto q-ml-auto" />
+          <q-img src="~/assets/logo-rectangle.png" width="260" class="q-mr-auto q-ml-auto" />
         </q-item-label>
         <EssentialLink
           v-for="{ name, link, title, icon, caption, classes } in linksList"
@@ -61,7 +61,7 @@
           :active="link === $route.path"
         />
         <q-item-label header class="text-grey-8 text-center q-mt-md">
-          <img
+          <q-img
             src="https://saac.com.co/api/storage/app/public/resources/supersolidaria.png"
             width="200"
             class="q-mr-auto q-ml-auto"

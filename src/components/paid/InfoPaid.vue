@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md" style="max-width: 400px; margin: auto">
     <q-card class="my-card" flat bordered>
-      <img src="https://saac.com.co/api/storage/app/public/resources/numeros_cuentas.jpeg" />
+      <q-img src="https://saac.com.co/api/storage/app/public/resources/numeros_cuentas.jpeg" />
     </q-card>
     <q-card class="my-card q-mt-xl" flat bordered>
       <q-list>

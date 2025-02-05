@@ -4,7 +4,7 @@
       <q-item>
         <q-item-section avatar>
           <q-avatar>
-            <img src="/icons/icon.png" />
+            <q-img src="/icons/icon.png" />
           </q-avatar>
         </q-item-section>
 

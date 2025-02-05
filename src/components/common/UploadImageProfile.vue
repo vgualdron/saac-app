@@ -2,7 +2,7 @@
   <div class="q-pa-xs">
     <div class="row q-ma-xs">
       <div class="col-12 text-center">
-        <img
+        <q-img
           v-if="urlFile"
           :src="urlFile"
           width="250rem"

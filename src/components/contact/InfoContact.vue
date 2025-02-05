@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md" style="max-width: 400px; margin: auto">
     <q-card class="my-card" flat bordered>
-      <img src="https://saac.com.co/api/storage/app/public/resources/sede_cucuta.jpg" />
+      <q-img src="https://saac.com.co/api/storage/app/public/resources/sede_cucuta.jpg" />
 
       <q-list>
         <q-item>
@@ -37,7 +37,7 @@
       </q-list>
     </q-card>
     <q-card class="my-card q-mt-xl" flat bordered>
-      <img src="https://saac.com.co/api/storage/app/public/resources/sede_ocania.jpg" />
+      <q-img src="https://saac.com.co/api/storage/app/public/resources/sede_ocania.jpg" />
       <q-list>
         <q-item>
           <q-item-section avatar>
@@ -72,7 +72,7 @@
       </q-list>
     </q-card>
     <q-card class="my-card q-mt-xl" flat bordered>
-      <img src="https://saac.com.co/api/storage/app/public/resources/sede_villa.jpg" />
+      <q-img src="https://saac.com.co/api/storage/app/public/resources/sede_villa.jpg" />
       <q-list>
         <q-item>
           <q-item-section avatar>
