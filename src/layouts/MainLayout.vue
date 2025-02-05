@@ -12,7 +12,7 @@
           class="no-shadow"
           push
           no-caps
-          :label="truncateText(user.name, 10)"
+          :label="truncateText(user.name, 18)"
           outline
         >
           <div class="row no-wrap q-pa-md">
@@ -88,7 +88,7 @@
           >
             <q-img
               src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-              width="32px"
+              width="36px"
             />
           </q-btn>
           <q-btn
@@ -99,7 +99,7 @@
           >
             <q-img
               src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
-              width="32px"
+              width="34px"
             />
           </q-btn>
         </q-item-label>
@@ -119,9 +119,9 @@
         indicator-color="white"
         active-color="white"
       >
-        <q-tab name="mails" icon="mail" label="Mails" />
-        <q-tab name="alarms" icon="alarm" label="Alarms" />
-        <q-tab name="movies" icon="movie" label="Movies" />
+        <q-tab name="mails" icon="store" label="Convenios" />
+        <q-tab name="alarms" icon="loyalty" label="ProgrePuntos" />
+        <q-tab name="movies" icon="currency_exchange" label="Adelantos" />
       </q-tabs>
     </q-page-container>
   </q-layout>

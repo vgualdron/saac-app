@@ -27,6 +27,9 @@ export const useCommonStore = defineStore('common', {
     resetStore() {
       this.$reset()
     },
+    setUserPhoto(url) {
+      this.user.data.user.user_url_photo_proile = url
+    },
     async signIn(payload) {
       try {
         this.isLoggedIn = true
