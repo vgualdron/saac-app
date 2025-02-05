@@ -46,6 +46,7 @@
               :factory="fileFactory"
               :hide-upload-btn="true"
               :auto-upload="false"
+              @click="handleUploaderClick"
             />
           </div>
         </q-card-section>
@@ -79,6 +80,9 @@ const props = defineProps({
   },
 })
 
+const file = computed(() => (image.value ? image.value.file : null))
+const extension = computed(() => (image.value ? image.value.type.split('/')[1] : null))
+
 const fileStore = useFileStore()
 
 const isLoading = ref(false)
@@ -87,16 +91,60 @@ const urlFile = ref(null)
 const image = ref(null)
 const showModal = ref(false)
 const uploadUrl = ref('https://example.com/upload')
+const uploader = ref(null)
 
 onMounted(async () => {
-  await fetchFile()
+  if (!props.config.photo) {
+    await fetchFile()
+  } else {
+    urlFile.value = props.config.photo
+  }
 })
 
-const file = computed(() => (image.value ? image.value.file : null))
-const extension = computed(() => (image.value ? image.value.type.split('/')[1] : null))
+// Función para manejar el clic en el uploader
+const handleUploaderClick = () => {
+  uploader.value.pickFiles()
+}
 
-const initCamera = () => {
-  showModal.value = true
+// Función para manejar los errores de carga
+const handleFailed = (error) => {
+  console.error('Error al cargar', error)
+}
+
+// Función para procesar el archivo antes de enviarlo
+const fileFactory = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const img = new Image()
+      img.onload = () => {
+        // Configurar las nuevas dimensiones (ajustar según sea necesario)
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        // Establecer las dimensiones deseadas (por ejemplo, 800px de ancho)
+        const maxWidth = 800
+        const scaleFactor = maxWidth / img.width
+        const newWidth = maxWidth
+        const newHeight = img.height * scaleFactor
+
+        // Redimensionar la imagen en el canvas
+        canvas.width = newWidth
+        canvas.height = newHeight
+        ctx.drawImage(img, 0, 0, newWidth, newHeight)
+
+        // Convertir la imagen redimensionada a un archivo
+        canvas.toBlob((blob) => {
+          const resizedFile = new File([blob], file.name, { type: file.type })
+          resolve(resizedFile) // Resolver con el archivo redimensionado
+        }, file.type)
+      }
+      img.onerror = (error) => reject(error)
+      img.src = reader.result
+    }
+    reader.onerror = (error) => reject(error)
+    reader.readAsDataURL(file) // Leer el archivo como URL de datos
+  })
 }
 
 const handleAdded = (files) => {
@@ -118,6 +166,10 @@ const handleAdded = (files) => {
   }
 }
 
+const initCamera = () => {
+  showModal.value = true
+}
+
 const sendImage = async () => {
   // showLoading('Guardando ...', 'Por favor, espere', true)
   isLoading.value = true
@@ -136,7 +188,7 @@ const sendImage = async () => {
 
   showModal.value = false
   showNotifications(fileStore.responseMessages, fileStore.status, 'top-right', 5000)
-  await fetchFile()
+  window.location.reload()
   isLoading.value = false
 }
 
@@ -156,7 +208,6 @@ const fetchFile = async () => {
 
 <style scoped>
 .editable-image {
-  border-radius: 50%;
   cursor: pointer;
   transition:
     box-shadow 0.3s ease,
@@ -166,5 +217,8 @@ const fetchFile = async () => {
 .editable-image:hover {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.03);
+}
+.q-uploader {
+  cursor: pointer;
 }
 </style>

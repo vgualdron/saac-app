@@ -24,6 +24,7 @@
                     storage: 'users',
                     modelName: 'users',
                     modelId: user.user_id,
+                    photo: photo,
                   }"
                 />
               </q-avatar>
@@ -60,6 +61,49 @@
           :active="link === $route.path"
         />
         <q-item-label header class="text-grey-8 text-center q-mt-md">
+          <img
+            src="https://saac.com.co/api/storage/app/public/resources/supersolidaria.png"
+            width="200"
+            class="q-mr-auto q-ml-auto"
+          />
+        </q-item-label>
+        <!-- Redes sociales -->
+        <q-item-label header class="text-grey-8 text-center q-mt-md">
+          <q-btn
+            href="https://api.whatsapp.com/send/?phone=573212152214&text&type=phone_number&app_absent=0"
+            target="_blank"
+            flat
+            class="q-mx-sm"
+          >
+            <q-img
+              src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+              width="48px"
+            />
+          </q-btn>
+          <q-btn
+            href="https://web.facebook.com/profile.php?id=100060538302793&_rdc=1&_rdr#"
+            target="_blank"
+            flat
+            class="q-mx-sm"
+          >
+            <q-img
+              src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+              width="32px"
+            />
+          </q-btn>
+          <q-btn
+            href="https://www.instagram.com/progresandoensalud_"
+            target="_blank"
+            flat
+            class="q-mx-sm"
+          >
+            <q-img
+              src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+              width="32px"
+            />
+          </q-btn>
+        </q-item-label>
+        <q-item-label header class="text-grey-8 text-center q-mt-md">
           {{ versionApp }}
         </q-item-label>
       </q-list>
@@ -84,12 +128,15 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useCommonStore } from '../stores/common'
-import EssentialLink from 'components/EssentialLink.vue'
+import EssentialLink from 'src/components/common/EssentialLink.vue'
 import UploadImageProfile from 'components/common/UploadImageProfile.vue'
+import { showLoading } from '../helpers/showLoading'
+import { useQuasar } from 'quasar'
 
 const commonStore = useCommonStore()
+const $q = useQuasar()
 
 const linksL = [
   {
@@ -99,13 +146,13 @@ const linksL = [
     link: '/home',
     classes: '',
   },
-  /* {
+  {
     title: 'Estado de cuenta',
     caption: 'Revisa tu estado de cuenta',
     icon: 'request_quote',
-    link: '/statement',
+    link: '/collections',
     classes: '',
-  }, */
+  },
   {
     title: 'Simular crédito',
     caption: 'Simula tu crédito',
@@ -114,10 +161,24 @@ const linksL = [
     classes: '',
   },
   {
-    title: 'Recaudos',
-    caption: 'Revisa tus recuados',
+    title: 'Pagos',
+    caption: 'Realiza tus recuados',
     icon: 'paid',
-    link: '/collections',
+    link: '/paid',
+    classes: '',
+  },
+  {
+    title: 'Contacto',
+    caption: 'Contactanos o envía tu PQR',
+    icon: 'phone',
+    link: '/contact',
+    classes: '',
+  },
+  {
+    title: 'Sobre nosotros',
+    caption: 'Revisa información en la web',
+    icon: 'info',
+    link: 'https://www.ipsprogresandoensalud.com/articulos/mision-y-vision',
     classes: '',
   },
   {
@@ -133,6 +194,12 @@ const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
 const tab = ref('mails')
 
+onMounted(async () => {
+  showLoading('Cargando ...', 'Por favor, espere', true)
+  await commonStore.getConfigurations()
+  $q.loading.hide()
+})
+
 const versionApp = computed(() => `Version ${process.env.LATEST_VERSION_APP}`)
 
 const user = computed(() => {
@@ -141,6 +208,12 @@ const user = computed(() => {
     u = commonStore.user.data.user
   }
   return u
+})
+
+const photo = computed(() => {
+  return user.value.user_url_photo_proile
+    ? `${process.env.URL_FILES}${user.value.user_url_photo_proile}`
+    : null
 })
 
 const truncateText = (text, maxLength) => {

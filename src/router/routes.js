@@ -53,6 +53,20 @@ const routes = [
     ],
   },
   {
+    path: '/paid',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/PaidPage.vue'),
+        meta: {
+          name: 'Pagos',
+          requiresAuth: true,
+        },
+      },
+    ],
+  },
+  {
     path: '/collections',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -60,7 +74,21 @@ const routes = [
         path: '',
         component: () => import('src/pages/CollectionsPage.vue'),
         meta: {
-          name: 'Recaudos',
+          name: 'Estado de cuenta',
+          requiresAuth: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/contact',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/ContactPage.vue'),
+        meta: {
+          name: 'Contacto',
           requiresAuth: true,
         },
       },

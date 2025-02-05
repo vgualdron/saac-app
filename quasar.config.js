@@ -67,7 +67,7 @@ export default defineConfig((ctx) => {
     },
 
     framework: {
-      iconSet: 'material-icons', // Quasar icon set
+      iconSet: 'mdi-v6', // Quasar icon set
       lang: 'es', // Quasar language pack
       config: {},
       importStrategy: 'auto',

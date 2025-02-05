@@ -55,7 +55,10 @@ defineProps({
 })
 
 const clickOption = (link) => {
-  console.log(link)
-  router.push(link)
+  if (typeof link === 'string' && (link.startsWith('http://') || link.startsWith('https://'))) {
+    window.open(link, '_blank')
+  } else {
+    router.push(link)
+  }
 }
 </script>

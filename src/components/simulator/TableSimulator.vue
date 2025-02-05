@@ -123,7 +123,7 @@
     <p class="text-bold text-primary text-center">${{ formatPriceDecimal(valueFee) }}</p>
     <q-table
       class="my-sticky-dynamic"
-      title="Amortización de crédito (Cuotas)"
+      title="Plan de pagos (Cuotas)"
       :rows="fees"
       :columns="columns"
       :loading="loading"

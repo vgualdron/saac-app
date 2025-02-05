@@ -44,4 +44,15 @@ export default {
       url: `${process.env.URL_API}/credit-line`,
       method: 'GET',
     }),
+  getConfigurations: () =>
+    http({
+      url: `${process.env.URL_API}/configuration`,
+      method: 'GET',
+    }),
+  sendPqr: (data) =>
+    http({
+      url: `${process.env.URL_API}/pqr`,
+      method: 'POST',
+      data,
+    }),
 }
