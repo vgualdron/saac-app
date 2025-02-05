@@ -69,39 +69,47 @@
         </q-item-label>
         <!-- Redes sociales -->
         <q-item-label header class="text-grey-8 text-center q-mt-md">
-          <q-btn
-            href="https://api.whatsapp.com/send/?phone=573212152214&text&type=phone_number&app_absent=0"
-            target="_blank"
-            flat
-            class="q-mx-sm"
-          >
-            <q-img
-              src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-              width="48px"
-            />
-          </q-btn>
-          <q-btn
-            href="https://web.facebook.com/profile.php?id=100060538302793&_rdc=1&_rdr#"
-            target="_blank"
-            flat
-            class="q-mx-sm"
-          >
-            <q-img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-              width="36px"
-            />
-          </q-btn>
-          <q-btn
-            href="https://www.instagram.com/progresandoensalud_"
-            target="_blank"
-            flat
-            class="q-mx-sm"
-          >
-            <q-img
-              src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
-              width="34px"
-            />
-          </q-btn>
+          <div class="row justify-center items-center no-wrap">
+            <q-btn
+              href="https://api.whatsapp.com/send/?phone=573228642938&text&type=phone_number&app_absent=0"
+              target="_blank"
+              flat
+              class="q-mx-sm"
+            >
+              <q-img
+                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                width="42px"
+              />
+            </q-btn>
+            <q-btn
+              href="https://www.facebook.com/profile.php?id=61557430033016"
+              target="_blank"
+              flat
+              class="q-mx-sm"
+            >
+              <q-img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                width="32px"
+              />
+            </q-btn>
+            <q-btn
+              href="https://www.instagram.com/coopserprog"
+              target="_blank"
+              flat
+              class="q-mx-sm"
+            >
+              <q-img
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+                width="32px"
+              />
+            </q-btn>
+            <q-btn href="https://www.tiktok.com/@coopserprog" target="_blank" flat class="q-mx-sm">
+              <q-img
+                src="https://upload.wikimedia.org/wikipedia/commons/3/34/Ionicons_logo-tiktok.svg"
+                width="32px"
+              />
+            </q-btn>
+          </div>
         </q-item-label>
         <q-item-label header class="text-grey-8 text-center q-mt-md">
           {{ versionApp }}
