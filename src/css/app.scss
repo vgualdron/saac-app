@@ -1,13 +1,10 @@
-/* body,
- .q-page-container {
+.q-page-container {
   background:
-    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-    url('https://saac.com.co/api/storage/app/public/resources/background_1.png') no-repeat center
+    linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
+    /* Capa blanca semi-transparente */
+      url('https://saac.com.co/api/storage/app/public/resources/background_5.jpg') repeat center
       center fixed;
-  background-size: cover;
-  color: white;
-  height: 100vh;
-  display: flex;
+  background-size: auto;
   justify-content: center;
   align-items: center;
-} */
+}

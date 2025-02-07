@@ -2,7 +2,7 @@
   <div class="q-pa-xs">
     <div class="row q-ma-xs">
       <div class="col-12 text-center">
-        <q-img
+        <img
           v-if="urlFile"
           :src="urlFile"
           width="250rem"
@@ -235,5 +235,12 @@ const fetchFile = async () => {
 }
 .q-uploader {
   cursor: pointer;
+}
+.crop-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover; /* La imagen se recorta para llenar el área definida */
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 </style>

@@ -66,6 +66,7 @@ const onSubmit = async () => {
 
   const data = {
     ...form,
+    subject: `PQR Contacto Progress App - ${user.name}`,
     name: user.name || 'Usuario Desconocido',
     document: user.document || 'N/A',
   }

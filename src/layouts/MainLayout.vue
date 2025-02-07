@@ -61,9 +61,9 @@
           :active="link === $route.path"
         />
         <q-item-label header class="text-grey-8 text-center q-mt-md">
-          <q-img
+          <img
             src="https://saac.com.co/api/storage/app/public/resources/supersolidaria.png"
-            width="200"
+            width="170"
             class="q-mr-auto q-ml-auto"
           />
         </q-item-label>
@@ -78,7 +78,7 @@
             >
               <q-img
                 src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-                width="32px"
+                width="42px"
               />
             </q-btn>
             <q-btn

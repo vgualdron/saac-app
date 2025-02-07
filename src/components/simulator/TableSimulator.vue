@@ -121,7 +121,18 @@
     </div>
     <p class="text-bold text-primary text-center q-mb-none">VALOR DE LA COUTA:</p>
     <p class="text-bold text-primary text-center">${{ formatPriceDecimal(valueFee) }}</p>
+    <div class="row text-center q-mb-md">
+      <q-btn
+        :disable="form.amount <= 0"
+        label="Generar plan de pagos"
+        color="primary"
+        class="col"
+        @click="generateTable"
+        rounded
+      />
+    </div>
     <q-table
+      v-if="generate"
       class="my-sticky-dynamic"
       title="Plan de pagos (Cuotas)"
       :rows="fees"
@@ -138,7 +149,7 @@
 </template>
 <script setup>
 import moment from 'moment'
-import { computed, onMounted, ref, reactive } from 'vue'
+import { computed, onMounted, ref, reactive, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
 // import { showNotifications } from '../../helpers/showNotifications'
@@ -148,6 +159,7 @@ const commonStore = useCommonStore()
 const $q = useQuasar()
 
 const loading = ref(false)
+const generate = ref(false)
 
 const initialFormState = {
   creditLine: null,
@@ -261,6 +273,29 @@ const fees = computed(() => {
   return array
 })
 
+/* const showNotification = (messages, status, align, timeout) => {
+  showNotifications(messages, status, align, timeout)
+} */
+
+const generateTable = async () => {
+  showLoading('Generando ...', 'Por favor, espere', true)
+  let user = commonStore.user?.data?.user || {}
+
+  const data = {
+    message: `Generó una simulación de crédito de: ${formatPrice(form.amount)}, tipo crédito: ${form.creditLine.name}, a ${form.amountFees} cuotas.`,
+    subject: `Simulación crédito Progress App - ${user.name}`,
+    name: user.name || 'Usuario Desconocido',
+    document: user.document || 'N/A',
+  }
+
+  await commonStore.sendPqr(data)
+
+  if (commonStore.status) {
+    generate.value = true
+  }
+  $q.loading.hide()
+}
+
 const updateAmount = (value) => {
   const numericValue = value.replace(/\D/g, '')
   form.amount = numericValue
@@ -296,6 +331,13 @@ onMounted(async () => {
   $q.loading.hide()
   loading.value = false
 })
+
+watch(
+  () => [form.creditLine, form.amount, form.amountFees],
+  () => {
+    generate.value = false
+  },
+)
 
 const columns = [
   {
