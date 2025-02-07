@@ -1,139 +1,160 @@
 <template>
   <div class="q-pa-md q-mb-xl">
-    <div class="row">
-      <div class="col-12 q-pl-none text-center">
-        <q-select
-          dense
-          rounded
-          outlined
-          map-options
-          transition-show="flip-up"
-          transition-hide="flip-down"
-          v-model="form.creditLine"
-          label="Línea de crédito *"
-          input-debounce="0"
-          :options="optionsCreditLines"
-          option-value="id"
-          option-label="name"
-          behavior="menu"
-          reactive-rules
-          :rules="[(val) => val || 'Error']"
-        >
-        </q-select>
-      </div>
-      <div v-if="form.creditLine && form.creditLine.value" class="col-6 q-pl-none text-center">
-        <q-input
-          dense
-          rounded
-          outlined
-          v-model="formattedAmount"
-          :max="form.creditLine.value"
-          :label="`Valor (Max ${formatPrice(form.creditLine.value)})`"
-          type="text"
-          @update:model-value="updateAmount"
-          reactive-rules
-          :rules="[(val) => (form.amount > 0 && form.amount <= form.creditLine.value) || 'Error']"
-        />
-      </div>
-      <div v-if="form.creditLine && form.creditLine.term" class="col-6 q-pl-sm text-center">
-        <q-input
-          dense
-          rounded
-          outlined
-          v-model="form.amountFees"
-          :label="`Plazo (meses, Max ${form.creditLine.term}) `"
-          type="number"
-          :max="parseInt(form.creditLine.term)"
-          :min="2"
-          reactive-rules
-          :rules="[
-            (val) =>
-              (parseInt(form.creditLine.term) > 1 &&
-                parseInt(form.creditLine.term) <= form.creditLine.term) ||
-              'Error',
-          ]"
-        />
-      </div>
-      <div
-        v-if="form.creditLine && form.creditLine.annual_interest"
-        class="col-6 q-pl-none text-center"
-      >
-        <q-input
-          dense
-          rounded
-          outlined
-          v-model="form.creditLine.annual_interest"
-          label="Interés anual(%)"
-          type="number"
-          readonly
-          reactive-rules
-          :rules="[(val) => val >= 0 || 'Error']"
-        />
-      </div>
-      <div
-        v-if="form.creditLine && form.creditLine.annual_interest"
-        class="col-6 q-pl-sm text-center"
-      >
-        <q-input
-          dense
-          rounded
-          outlined
-          v-model="form.creditLine.interest"
-          label="Interés (%)"
-          type="number"
-          readonly
-          reactive-rules
-          :rules="[(val) => val >= 0 || 'Error']"
-        />
-      </div>
-      <div
-        v-if="form.creditLine && form.creditLine.debtor_insurance >= 0"
-        class="col-6 q-pl-none text-center"
-      >
-        <q-input
-          dense
-          rounded
-          outlined
-          v-model="form.creditLine.debtor_insurance"
-          label="Seguro de vida deudor"
-          type="number"
-          readonly
-          reactive-rules
-          :rules="[(val) => val >= 0 || 'Error']"
-        />
-      </div>
-      <div
-        v-if="form.creditLine && form.creditLine.credit_insurance >= 0"
-        class="col-6 q-pl-sm text-center"
-      >
-        <q-input
-          dense
-          rounded
-          outlined
-          v-model="form.creditLine.credit_insurance"
-          label="Seguro de crédito"
-          type="number"
-          readonly
-          reactive-rules
-          :rules="[(val) => val >= 0 || 'Error']"
-        />
-      </div>
-    </div>
-    <p class="text-bold text-primary text-center q-mb-none">VALOR DE LA COUTA:</p>
-    <p class="text-bold text-primary text-center">${{ formatPriceDecimal(valueFee) }}</p>
-    <div class="row text-center q-mb-md">
-      <q-btn
-        :disable="form.amount <= 0"
-        label="Generar plan de pagos"
-        color="primary"
-        class="col"
-        @click="generateTable"
-        rounded
-      />
-    </div>
+    <q-card class="my-card" flat bordered>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Simulación de crédito</q-item-label>
+          <q-item-label caption>
+            Selecciona la linea de credito, la cantidad de plazo, el valor a simular y oprime el
+            botón de generar plan de pagos.</q-item-label
+          >
+        </q-item-section>
+      </q-item>
+      <q-separator />
+      <q-card-section horizontal>
+        <q-card-section class="col-12">
+          <div class="row">
+            <div class="col-12 q-pl-none text-center">
+              <q-select
+                dense
+                rounded
+                outlined
+                map-options
+                transition-show="flip-up"
+                transition-hide="flip-down"
+                v-model="form.creditLine"
+                label="Línea de crédito *"
+                input-debounce="0"
+                :options="optionsCreditLines"
+                option-value="id"
+                option-label="name"
+                behavior="menu"
+                reactive-rules
+                :rules="[(val) => val || 'Error']"
+              >
+              </q-select>
+            </div>
+            <div
+              v-if="form.creditLine && form.creditLine.value"
+              class="col-6 q-pl-none text-center"
+            >
+              <q-input
+                dense
+                rounded
+                outlined
+                v-model="formattedAmount"
+                :max="form.creditLine.value"
+                :label="`Valor (Max ${formatPrice(form.creditLine.value)})`"
+                type="text"
+                @update:model-value="updateAmount"
+                reactive-rules
+                :rules="[
+                  (val) => (form.amount > 0 && form.amount <= form.creditLine.value) || 'Error',
+                ]"
+              />
+            </div>
+            <div v-if="form.creditLine && form.creditLine.term" class="col-6 q-pl-sm text-center">
+              <q-input
+                dense
+                rounded
+                outlined
+                v-model="form.amountFees"
+                :label="`Plazo (meses, Max ${form.creditLine.term}) `"
+                type="number"
+                :max="parseInt(form.creditLine.term)"
+                :min="2"
+                reactive-rules
+                :rules="[
+                  (val) =>
+                    (parseInt(form.creditLine.term) > 1 &&
+                      parseInt(form.creditLine.term) <= form.creditLine.term) ||
+                    'Error',
+                ]"
+              />
+            </div>
+            <div
+              v-if="form.creditLine && form.creditLine.annual_interest"
+              class="col-6 q-pl-none text-center"
+            >
+              <q-input
+                dense
+                rounded
+                outlined
+                v-model="form.creditLine.annual_interest"
+                label="Interés anual(%)"
+                type="number"
+                readonly
+                reactive-rules
+                :rules="[(val) => val >= 0 || 'Error']"
+              />
+            </div>
+            <div
+              v-if="form.creditLine && form.creditLine.annual_interest"
+              class="col-6 q-pl-sm text-center"
+            >
+              <q-input
+                dense
+                rounded
+                outlined
+                v-model="form.creditLine.interest"
+                label="Interés (%)"
+                type="number"
+                readonly
+                reactive-rules
+                :rules="[(val) => val >= 0 || 'Error']"
+              />
+            </div>
+            <div
+              v-if="form.creditLine && form.creditLine.debtor_insurance >= 0"
+              class="col-6 q-pl-none text-center"
+            >
+              <q-input
+                dense
+                rounded
+                outlined
+                v-model="form.creditLine.debtor_insurance"
+                label="Seguro de vida deudor"
+                type="number"
+                readonly
+                reactive-rules
+                :rules="[(val) => val >= 0 || 'Error']"
+              />
+            </div>
+            <div
+              v-if="form.creditLine && form.creditLine.credit_insurance >= 0"
+              class="col-6 q-pl-sm text-center"
+            >
+              <q-input
+                dense
+                rounded
+                outlined
+                v-model="form.creditLine.credit_insurance"
+                label="Seguro de crédito"
+                type="number"
+                readonly
+                reactive-rules
+                :rules="[(val) => val >= 0 || 'Error']"
+              />
+            </div>
+          </div>
+          <p class="text-bold text-primary text-center q-mb-none">VALOR DE LA COUTA:</p>
+          <p class="text-bold text-primary text-center">${{ formatPriceDecimal(valueFee) }}</p>
+          <div class="row text-center q-mb-md">
+            <q-btn
+              :disable="form.amount <= 0"
+              label="Generar plan de pagos"
+              color="primary"
+              class="col"
+              @click="generateTable"
+              rounded
+            />
+          </div>
+        </q-card-section>
+      </q-card-section>
+    </q-card>
     <q-table
       v-if="generate"
-      class="my-sticky-dynamic"
+      class="q-mt-md"
       title="Plan de pagos (Cuotas)"
       :rows="fees"
       :columns="columns"
