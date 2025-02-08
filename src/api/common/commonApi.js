@@ -49,6 +49,16 @@ export default {
       url: `${process.env.URL_API}/configuration`,
       method: 'GET',
     }),
+  getCategories: () =>
+    http({
+      url: `${process.env.URL_API}/category`,
+      method: 'GET',
+    }),
+  getShops: () =>
+    http({
+      url: `${process.env.URL_API}/shop`,
+      method: 'GET',
+    }),
   sendPqr: (data) =>
     http({
       url: `${process.env.URL_API}/pqr`,

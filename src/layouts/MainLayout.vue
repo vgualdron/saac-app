@@ -4,15 +4,13 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title>
-          {{ $route.meta.name }}
-        </q-toolbar-title>
+        <q-toolbar-title> </q-toolbar-title>
         <q-btn-dropdown
           color="white"
           class="no-shadow"
           push
           no-caps
-          :label="truncateText(user.name, 18)"
+          :label="truncateText(user.name, 15)"
           outline
         >
           <div class="row no-wrap q-pa-md">
@@ -115,18 +113,6 @@
 
     <q-page-container>
       <router-view />
-      <q-tabs
-        v-model="tab"
-        dense
-        switch-indicator
-        class="bg-primary text-white text-grey-5 shadow-2 fixed-bottom"
-        indicator-color="white"
-        active-color="white"
-      >
-        <q-tab name="mails" icon="store" label="Convenios" />
-        <q-tab name="alarms" icon="loyalty" label="ProgrePuntos" />
-        <q-tab name="movies" icon="currency_exchange" label="Adelantos" />
-      </q-tabs>
     </q-page-container>
   </q-layout>
 </template>
@@ -196,7 +182,6 @@ const linksL = [
 
 const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
-const tab = ref('mails')
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)

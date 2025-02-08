@@ -18,6 +18,8 @@ export const useCommonStore = defineStore('common', {
     cities: [],
     creditLines: [],
     configurations: [],
+    categories: [],
+    shops: [],
     isLoggedIn: false,
     status: false,
     responseMessages: [],
@@ -159,6 +161,48 @@ export const useCommonStore = defineStore('common', {
         const response = await commonApi.getConfigurations()
         if (response && response.data && response.data.data) {
           this.configurations = response.data.data
+        }
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
+    async getCategories() {
+      try {
+        this.status = true
+        const response = await commonApi.getCategories()
+        if (response && response.data && response.data.data) {
+          this.categories = response.data.data
+        }
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
+    async getShops() {
+      try {
+        this.status = true
+        const response = await commonApi.getShops()
+        if (response && response.data && response.data.data) {
+          this.shops = response.data.data
         }
       } catch (error) {
         this.status = false
