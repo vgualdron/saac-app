@@ -22,5 +22,5 @@
 import { ref } from 'vue'
 import CardTemplate from 'components/identification/CardTemplate.vue'
 import InfoShops from 'components/shop/InfoShops.vue'
-const tab = ref('identity')
+const tab = ref('shops')
 </script>

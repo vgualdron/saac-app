@@ -40,7 +40,7 @@
     </div>
     <div class="row q-pl-none text-center">
       <div class="col-6 text-center is-flex q-pa-sm" v-for="shop in optionsShops" :key="shop.id">
-        <q-card class="my-card">
+        <q-card class="my-card" @click="openShop(shop)">
           <q-item>
             <q-item-section>
               <q-item-label caption class="text-bold text-primary">{{ shop.name }}</q-item-label>
@@ -56,11 +56,13 @@
         </q-card>
       </div>
     </div>
+    <modal-shop v-if="showModalShop" v-model="showModalShop" :shop="shopSelected" />
   </div>
 </template>
 <script setup>
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import ModalShop from 'components/shop/ModalShop.vue'
 import { useCommonStore } from '../../stores/common'
 import { showLoading } from '../../helpers/showLoading'
 
@@ -70,6 +72,9 @@ const $q = useQuasar()
 const form = reactive({
   category: null,
 })
+
+const showModalShop = ref(false)
+const shopSelected = ref(null)
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
@@ -96,6 +101,13 @@ const getNameCategory = (value) => {
   }
   return name
 }
+
+const openShop = (value) => {
+  console.log(value)
+  shopSelected.value = value
+  showModalShop.value = true
+}
+
 const getUrl = (value) => {
   return `${process.env.URL_FILES}${value}`
 }

@@ -24,7 +24,7 @@
     <q-dialog v-model="showModal" persistent>
       <q-card style="max-width: 95vw">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Subir y Recortar Imagen</div>
+          <div class="text-h6">Subir y Recortar</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -235,6 +235,8 @@ const fetchFile = async () => {
 }
 .q-uploader {
   cursor: pointer;
+  max-width: 300px;
+  width: 100%;
 }
 .crop-image {
   width: 300px;
