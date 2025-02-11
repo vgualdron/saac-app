@@ -20,6 +20,7 @@ export const useCommonStore = defineStore('common', {
     configurations: [],
     categories: [],
     shops: [],
+    points: [],
     isLoggedIn: false,
     status: false,
     responseMessages: [],
@@ -224,6 +225,48 @@ export const useCommonStore = defineStore('common', {
         const response = await commonApi.sendPqr(payload)
         if (response && response.data && response.data.message) {
           this.responseMessages = response.data.message
+        }
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
+    async changePassword(payload) {
+      try {
+        this.status = true
+        const response = await commonApi.changePassword(payload)
+        if (response && response.data && response.data.message) {
+          this.responseMessages = response.data.message
+        }
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
+    async getPoints(status) {
+      try {
+        this.status = true
+        const response = await commonApi.getPoints(status)
+        if (response && response.data && response.data.data) {
+          this.points = response.data.data
         }
       } catch (error) {
         this.status = false

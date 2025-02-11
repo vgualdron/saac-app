@@ -10,7 +10,7 @@
           class="no-shadow"
           push
           no-caps
-          :label="truncateText(user.name, 15)"
+          :label="truncateText(user.name, 18)"
           outline
         >
           <div class="row no-wrap q-pa-md">
@@ -26,17 +26,33 @@
                   }"
                 />
               </q-avatar>
-              <div class="text-subtitle1 q-mt-xs text-weight-bolder text-center">
-                {{ user.name }}
-              </div>
-              <!-- <q-btn
-                color="primary"
-                label="Cambiar contraseña"
-                push
-                size="sm"
-                v-close-popup
-                @click="showChangePasswordForm()"
-              /> -->
+              <q-list>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-avatar icon="perm_identity" color="grey" text-color="white" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ user.name }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-avatar icon="loyalty" color="grey" text-color="white" outline />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ user.points }} progrepuntos</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="showModalPassword = true">
+                  <q-item-section avatar>
+                    <q-avatar icon="password" color="primary" text-color="white" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Cambiar contraseña</q-item-label>
+                    <q-item-label caption>Click para cambiar contraseña</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
             </div>
           </div>
         </q-btn-dropdown>
@@ -112,8 +128,14 @@
     </q-drawer>
 
     <q-page-container>
+      <!-- <q-banner class="bg-red-4 text-white q-mt-sm">
+        Debes realizar las siguientes acciones: <br />
+        * Cambiar contraseña. <br />
+        * Definir foto de perfil
+      </q-banner> -->
       <router-view />
     </q-page-container>
+    <form-change-password v-if="showModalPassword" v-model="showModalPassword" />
   </q-layout>
 </template>
 
@@ -122,6 +144,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useCommonStore } from '../stores/common'
 import EssentialLink from 'src/components/common/EssentialLink.vue'
 import UploadImageProfile from 'components/common/UploadImageProfile.vue'
+import FormChangePassword from 'components/common/FormChangePassword.vue'
 import { showLoading } from '../helpers/showLoading'
 import { useQuasar } from 'quasar'
 
@@ -182,6 +205,7 @@ const linksL = [
 
 const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
+const showModalPassword = ref(false)
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
@@ -214,3 +238,4 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
+<style scoped></style>

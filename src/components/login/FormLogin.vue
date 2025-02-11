@@ -15,7 +15,7 @@
               v-model.trim="form.documentNumber"
               label="Número de documento *"
               type="number"
-              lazy-rules
+              reactive-rules
               :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
             <q-input
@@ -25,7 +25,7 @@
               v-model.trim="form.password"
               label="Contraseña *"
               type="password"
-              lazy-rules
+              reative-rules
               :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
             <div class="row text-center q-mb-md">

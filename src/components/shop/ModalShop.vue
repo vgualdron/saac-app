@@ -10,6 +10,10 @@
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
           <div class="text-h6 q-mt-sm q-mb-xs text-primary">{{ props.shop.name }}</div>
+        </q-card-section>
+      </q-card-section>
+      <q-card-section horizontal>
+        <q-card-section class="q-pt-xs">
           <div class="text-caption text-bold">
             {{ props.shop.agreement }}
           </div>

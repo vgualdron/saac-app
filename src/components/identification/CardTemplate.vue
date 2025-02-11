@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center q-mb-md">
     <div class="column items-center">
-      <canvas ref="canvas" width="350" height="500"></canvas>
+      <canvas ref="canvas" width="320" height="500"></canvas>
       <!-- <q-btn color="primary" label="Descargar Carnet" @click="download" class="q-my-md" /> -->
     </div>
   </q-page>
@@ -22,7 +22,7 @@ const generate = async () => {
     name: user.name || 'Usuario Desconocido',
     document: user.document || 'N/A',
     type_document: user.type_document || '',
-    qr: `${process.env.URL_API}/validate-card/${user.document || ''}`,
+    qr: `${process.env.URL_PANEL}/validate-card/${user.user_id || ''}`,
     photo: user.user_url_photo_proile
       ? `${process.env.URL_FILES}${user.user_url_photo_proile}`
       : new URL('/default-photo.png', import.meta.url).href, // Imagen por defecto

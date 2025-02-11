@@ -23,13 +23,6 @@
               {{ getNameCategory(scope.opt) }}
             </span>
           </template>
-          <template v-slot:append>
-            <q-icon
-              name="close"
-              @click.stop.prevent="form.category = null"
-              class="cursor-pointer"
-            />
-          </template>
           <template v-slot:no-option>
             <q-item>
               <q-item-section class="text-grey"> No hay coincidencias </q-item-section>

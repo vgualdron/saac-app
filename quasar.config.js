@@ -34,6 +34,7 @@ export default defineConfig((ctx) => {
       },
       env: {
         URL_API: ctx.dev ? process.env.URL_API : process.env.URL_API_PROD,
+        URL_PANEL: process.env.URL_PANEL,
         LATEST_VERSION_APP: process.env.LATEST_VERSION_APP,
         URL_FILES: process.env.URL_FILES,
         APP_ID_ONE_SIGNAL: process.env.APP_ID_ONE_SIGNAL,
@@ -67,7 +68,7 @@ export default defineConfig((ctx) => {
     },
 
     framework: {
-      iconSet: 'mdi-v6', // Quasar icon set
+      iconSet: 'material-icons', // Quasar icon set
       lang: 'es', // Quasar language pack
       config: {},
       importStrategy: 'auto',

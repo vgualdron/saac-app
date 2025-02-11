@@ -65,4 +65,15 @@ export default {
       method: 'POST',
       data,
     }),
+  changePassword: (data) =>
+    http({
+      url: `${process.env.URL_API}/user/update-profile/${data.id}`,
+      method: 'PUT',
+      data,
+    }),
+  getPoints: (data) =>
+    http({
+      url: `${process.env.URL_API}/point/by-user-session/${data}`,
+      method: 'GET',
+    }),
 }
