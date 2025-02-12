@@ -9,7 +9,7 @@
           class="editable-image"
           @click="initCamera"
         />
-        <p v-else class="text-subtitle1 text-center" @click="initCamera">No hay foto</p>
+        <p v-else class="text-subtitle1 text-center" @click="initCamera">Carga una foto</p>
         <q-btn
           v-if="!item && type !== 'read'"
           color="primary"
@@ -42,6 +42,7 @@
               @failed="handleFailed"
               :hide-upload-btn="true"
               :auto-upload="false"
+              @click="handleUploaderClick"
             />
           </div>
           <div v-else>
@@ -68,11 +69,11 @@
 import { ref, onMounted, nextTick } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
-import { useCommonStore } from '../../stores/common'
+// import { useCommonStore } from '../../stores/common'
 import { useFileStore } from '../../stores/file'
 import { showNotifications } from '../../helpers/showNotifications'
 
-const commonStore = useCommonStore()
+// const commonStore = useCommonStore()
 
 const props = defineProps({
   config: Object,
@@ -92,11 +93,7 @@ const uploader = ref(null)
 let cropper = null
 
 onMounted(async () => {
-  if (!props.config.photo) {
-    await fetchFile()
-  } else {
-    urlFile.value = props.config.photo
-  }
+  await fetchFile()
 })
 
 // Función para inicializar el modal y subir la imagen
@@ -186,7 +183,6 @@ const cropImage = async () => {
       cropper = null
       imagePreview.value = null
       showModal.value = false
-      window.location.reload()
     } catch (error) {
       console.error('Error al guardar la imagen:', error)
     } finally {
@@ -209,7 +205,6 @@ const fetchFile = async () => {
   if (response.data) {
     item.value = response.data
     urlFile.value = `${process.env.URL_FILES}${item.value.url}`
-    commonStore.setUserPhoto(item.value.url)
   }
   isLoading.value = false
 }
