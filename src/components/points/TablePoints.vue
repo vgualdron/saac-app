@@ -16,14 +16,17 @@
       <q-separator />
       <q-card-section horizontal>
         <q-card-section class="col-12">
-          <upload-image
-            :config="{
-              name: 'FOTO_PUNTOS',
-              storage: 'points',
-              modelName: 'points',
-              modelId: 1,
-            }"
-          />
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar icon="loyalty" color="primary" text-color="white" outline />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Tienes {{ total }} progrepuntos</q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-btn color="primary" @click="showModalPoint = true">Redimir progrepuntos</q-btn>
+            </q-item-section>
+          </q-item>
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -39,18 +42,20 @@
       :pagination="pagination"
       :rows-per-page-options="[0]"
     />
+    <modal-form-point v-if="showModalPoint" v-model="showModalPoint" />
   </div>
 </template>
 <script setup>
+import ModalFormPoint from 'components/points/ModalFormPoint.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import UploadImage from 'components/common/UploadImage.vue'
 import { useCommonStore } from '../../stores/common'
-// import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
 const $q = useQuasar()
+
+const showModalPoint = ref(false)
 
 const loading = ref(false)
 const pagination = ref({
@@ -70,7 +75,7 @@ const total = computed(() => {
   return commonStore.points.reduce((acc, item) => acc + item.amount, 0)
 })
 const title = computed(() => {
-  return `Progrepuntos ( ${total.value} )`
+  return `Progrepuntos`
 })
 
 const columns = [

@@ -9,8 +9,8 @@
         </q-item-section>
 
         <q-item-section>
-          <q-item-label> Cambiar contraseña </q-item-label>
-          <q-item-label caption> Escribe tu nueva contraseña y confirmala </q-item-label>
+          <q-item-label> Redimir progrepuntos </q-item-label>
+          <q-item-label caption> Completa los datos y carga la factura </q-item-label>
         </q-item-section>
       </q-item>
       <q-separator />
@@ -37,6 +37,15 @@
               reactive-rules
               :rules="rules.confirmPassword"
             />
+
+            <upload-image
+              :config="{
+                name: 'FOTO_PUNTOS',
+                storage: 'points',
+                modelName: 'points',
+                modelId: 1,
+              }"
+            />
             <div class="row text-center q-mb-md">
               <q-btn label="Cambiar contraseña" type="submit" color="primary" class="col" rounded />
             </div>
@@ -50,19 +59,24 @@
   </q-dialog>
 </template>
 <script setup>
-import { reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, reactive } from 'vue'
 import { useQuasar } from 'quasar'
+// import UploadImage from 'components/common/UploadImage.vue'
 import { useCommonStore } from '../../stores/common'
 import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
 const $q = useQuasar()
-const router = useRouter()
 
 const props = defineProps({
   value: Boolean,
+})
+
+onMounted(async () => {
+  showLoading('Cargando ...', 'Por favor, espere', true)
+  await commonStore.getPoints('pendiente,aprobado,rechazado,creado')
+  $q.loading.hide()
 })
 
 const showModal = computed({
@@ -111,9 +125,9 @@ const onSubmit = async () => {
   await commonStore.changePassword(data)
   showNotification(commonStore.responseMessages, commonStore.status, 'bottom-right', 5000)
 
-  if (commonStore.status) {
+  /* if (commonStore.status) {
     router.push('/')
-  }
+  } */
   $q.loading.hide()
 }
 
@@ -121,9 +135,4 @@ const onReset = () => {
   showModal.value = false
 }
 </script>
-<style scoped>
-.my-card {
-  width: 100%;
-  max-width: 450px;
-}
-</style>
+<style scoped></style>
