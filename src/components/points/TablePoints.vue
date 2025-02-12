@@ -15,14 +15,20 @@
       </q-item>
       <q-separator />
       <q-card-section horizontal>
+        <q-card-section class="col-12 text-center">
+          <q-item class="text-center">
+            <q-item-section>
+              <q-item-label>
+                <q-icon name="loyalty" color="primary" size="md" />
+                Tienes {{ total }} progrepuntos
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+      </q-card-section>
+      <q-card-section horizontal>
         <q-card-section class="col-12">
           <q-item>
-            <q-item-section avatar>
-              <q-avatar icon="loyalty" color="primary" text-color="white" outline />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Tienes {{ total }} progrepuntos</q-item-label>
-            </q-item-section>
             <q-item-section>
               <q-btn color="primary" @click="showModalPoint = true">Redimir progrepuntos</q-btn>
             </q-item-section>
@@ -89,6 +95,14 @@ const columns = [
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
       return new Date(val).toLocaleDateString('es-ES', options)
     },
+    sortable: true,
+  },
+  {
+    name: 'status',
+    required: true,
+    label: 'Estado',
+    align: 'left',
+    field: (row) => row.status,
     sortable: true,
   },
   {
