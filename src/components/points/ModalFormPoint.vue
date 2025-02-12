@@ -4,7 +4,7 @@
       <q-item>
         <q-item-section avatar>
           <q-avatar>
-            <q-img src="/icons/icon.png" />
+            <q-icon name="loyalty" color="primary" size="md" />
           </q-avatar>
         </q-item-section>
 
@@ -17,27 +17,85 @@
       <q-card-section horizontal>
         <q-card-section class="col-12">
           <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-none">
+            <q-select
+              dense
+              rounded
+              outlined
+              emit-value
+              transition-show="flip-up"
+              transition-hide="flip-down"
+              v-model="form.category"
+              label="Categoria de convenios *"
+              input-debounce="0"
+              :options="optionsCategories"
+              option-value="id"
+              option-label="name"
+              behavior="menu"
+              clearable
+            >
+              <template v-slot:selected-item="scope">
+                <span>
+                  {{ getNameCategory(scope.opt) }}
+                </span>
+              </template>
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-select
+              dense
+              rounded
+              outlined
+              emit-value
+              transition-show="flip-up"
+              transition-hide="flip-down"
+              v-model="form.shop_id"
+              label="Convenio *"
+              input-debounce="0"
+              :options="optionsShops"
+              option-value="id"
+              option-label="name"
+              behavior="menu"
+              class="q-mt-sm"
+              reactive-rules
+              :rules="[(val) => val && val.length > 0]"
+              clearable
+            >
+              <template v-slot:selected-item="scope">
+                <span>
+                  {{ getNameShop(scope.opt) }}
+                </span>
+              </template>
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
             <q-input
               dense
               rounded
               outlined
-              v-model.trim="form.password"
-              label="Contraseña *"
-              type="password"
+              v-model.trim="form.invoice_number"
+              label="Número de factura *"
+              type="text"
+              class="q-mt-none"
               reactive-rules
-              :rules="rules.password"
+              :rules="[(val) => (val && val.length > 0) || 'Este campo es obligatorio']"
             />
             <q-input
               dense
               rounded
               outlined
-              v-model.trim="form.confirmPassword"
-              label="Confirmar contraseña *"
-              type="password"
+              v-model="formattedAmount"
+              :label="`Valor `"
+              type="text"
+              @update:model-value="updateAmount"
               reactive-rules
-              :rules="rules.confirmPassword"
+              :rules="[(val) => form.amount > 0 || 'Error']"
             />
-
             <upload-image
               :config="{
                 name: 'FOTO_PUNTOS',
@@ -46,10 +104,11 @@
                 modelId: 1,
               }"
             />
-            <div class="row text-center q-mb-md">
-              <q-btn label="Cambiar contraseña" type="submit" color="primary" class="col" rounded />
+            <q-separator />
+            <div class="row text-center q-my-sm">
+              <q-btn label="Solicitar puntos" type="submit" color="primary" class="col" rounded />
             </div>
-            <div class="row text-center q-mb-sm">
+            <div class="row text-center q-my-sm">
               <q-btn label="Cerrar" color="primary" class="col" rounded outline v-close-popup />
             </div>
           </q-form>
@@ -59,9 +118,9 @@
   </q-dialog>
 </template>
 <script setup>
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
-// import UploadImage from 'components/common/UploadImage.vue'
+import UploadImage from 'components/common/UploadImage.vue'
 import { useCommonStore } from '../../stores/common'
 import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
@@ -75,7 +134,13 @@ const props = defineProps({
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
-  await commonStore.getPoints('pendiente,aprobado,rechazado,creado')
+  $q.loading.hide()
+})
+
+onMounted(async () => {
+  showLoading('Cargando ...', 'Por favor, espere', true)
+  await commonStore.getCategories()
+  await commonStore.getShops()
   $q.loading.hide()
 })
 
@@ -85,14 +150,55 @@ const showModal = computed({
 })
 
 const initialFormState = {
-  password: '',
-  confirmPassword: '',
+  category: '',
+  shop_id: '',
+  invoice_number: '',
+  amount: 0,
+  description: 'Redimir puntos con compras',
 }
 
 const form = reactive({ ...initialFormState })
+const formattedAmount = ref(initialFormState.amount)
 
 const showNotification = (messages, status, align, timeout) => {
   showNotifications(messages, status, align, timeout)
+}
+
+const updateAmount = (value) => {
+  const numericValue = value.replace(/\D/g, '')
+  form.amount = numericValue
+  formattedAmount.value = new Intl.NumberFormat('es-CO').format(numericValue)
+}
+
+const optionsShops = computed(() => {
+  let s = commonStore.shops
+  if (form.category) {
+    s = commonStore.shops.filter((sh) => sh.category_id === form.category)
+  }
+  return s
+})
+const optionsCategories = computed(() => {
+  return commonStore.categories
+})
+
+const getNameCategory = (value) => {
+  let name = optionsCategories.value.find((opt) => opt.id === value)?.name
+  if (name && name.length > 30) {
+    name = truncateString(name, 30)
+  }
+  return name
+}
+
+const getNameShop = (value) => {
+  let name = optionsShops.value.find((opt) => opt.id === value)?.name
+  if (name && name.length > 30) {
+    name = truncateString(name, 30)
+  }
+  return name
+}
+
+const truncateString = (str, maxLength = 30) => {
+  return str.length > maxLength ? str.substring(0, maxLength) + '...' : str
 }
 
 const user = computed(() => {
@@ -103,23 +209,11 @@ const user = computed(() => {
   return u
 })
 
-const rules = {
-  password: [
-    (val) => !!val || 'Debe ingresar una contraseña',
-    (val) => val.length >= 5 || 'La contraseña debe tener un mínimo de 5 caracteres',
-    (val) => val.length <= 20 || 'La contraseña debe tener un máximo de 20 caracteres',
-  ],
-  confirmPassword: [
-    (val) => !!val || 'Debe ingresar una confirmación de contraseña',
-    (val) => val === form.password || 'La confirmación no coincide con la contraseña',
-  ],
-}
-
 const onSubmit = async () => {
-  showLoading('Cambiando contraseña ...', 'Por favor, espere', true)
+  showLoading('Registrando ...', 'Por favor, espere', true)
   const data = {
     ...form,
-    id: user.value.user_id,
+    user_id: user.value.user_id,
   }
 
   await commonStore.changePassword(data)

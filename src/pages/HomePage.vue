@@ -15,9 +15,9 @@
       active-color="white"
     >
       <q-tab name="identity" icon="perm_identity" label="Carnet" />
-      <q-tab name="points" icon="loyalty" label="Puntos" />
       <q-tab name="shops" icon="store" label="Convenios" />
       <q-tab name="status" icon="flip_camera_ios" label="Estados" :disable="false" />
+      <q-tab name="points" icon="loyalty" label="Progrepuntos" />
       <q-tab name="repayments" icon="currency_exchange" label="Adelantos" :disable="true" />
     </q-tabs>
   </q-page>
@@ -41,3 +41,8 @@ const finishStatus = () => {
   tab.value = 'shops'
 }
 </script>
+<style scoped>
+::v-deep(.q-tab__label) {
+  font-size: 10px !important;
+}
+</style>
