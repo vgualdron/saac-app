@@ -4,11 +4,7 @@
     <info-shops v-else-if="tab === 'shops'" />
     <table-points v-else-if="tab === 'points'" />
     <div v-else-if="tab === 'status'">
-      <status-player
-        v-if="showStatusPlayer"
-        :statuses="statuses"
-        @close="showStatusPlayer = false"
-      />
+      <status-player v-if="showStatusPlayer" :statuses="statuses" @close="finishStatus" />
     </div>
     <q-tabs
       v-model="tab"
@@ -38,5 +34,10 @@ const showStatusPlayer = ref(true)
 const statuses = ref([
   { url: 'https://saac.com.co/api/storage/app/public/resources/video_1.mp4' },
   { url: 'https://saac.com.co/api/storage/app/public/resources/video_2.mp4' },
+  { url: 'https://saac.com.co/api/storage/app/public/resources/video_3.mp4' },
 ])
+
+const finishStatus = () => {
+  tab.value = 'shops'
+}
 </script>
