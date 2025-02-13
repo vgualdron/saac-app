@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center q-mt-xl" style="display: block">
+  <q-page class="flex flex-center q-mt-none" style="display: block">
     <form-login />
   </q-page>
 </template>
