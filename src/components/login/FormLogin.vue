@@ -1,6 +1,6 @@
 <template>
   <div :style="backgroundStyle" class="login-container">
-    <div class="q-pa-md" style="max-width: 400px; margin: auto">
+    <div class="q-pa-md" style="width: 400px; margin: auto">
       <q-card class="my-card" flat bordered>
         <q-card-section horizontal>
           <q-img
@@ -122,7 +122,6 @@ onMounted(async () => {
 <style scoped>
 .my-card {
   width: 100%;
-  max-width: 450px;
   background: rgba(255, 255, 255, 0.5); /* Fondo semitransparente */
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
