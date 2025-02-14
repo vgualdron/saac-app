@@ -1,9 +1,7 @@
 .q-page-container {
   background:
     linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
-    /* Capa blanca semi-transparente */
-      url('https://saac.com.co/api/storage/app/public/resources/background_5.jpg') repeat center
-      center fixed;
+    url('/background_5.jpg') repeat center center fixed;
   background-size: auto;
   justify-content: center;
   align-items: center;
