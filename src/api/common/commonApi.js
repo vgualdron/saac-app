@@ -71,9 +71,4 @@ export default {
       method: 'PUT',
       data,
     }),
-  getPoints: (data) =>
-    http({
-      url: `${process.env.URL_API}/point/by-user-session/${data}`,
-      method: 'GET',
-    }),
 }

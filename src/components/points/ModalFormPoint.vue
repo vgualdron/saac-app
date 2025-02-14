@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="showModal" persistent>
+  <q-dialog v-model="showModal">
     <q-card class="my-card" flat bordered>
       <q-item>
         <q-item-section avatar>
@@ -58,9 +58,9 @@
               option-value="id"
               option-label="name"
               behavior="menu"
-              class="q-mt-sm"
+              class="q-mt-md"
               reactive-rules
-              :rules="[(val) => val && val.length > 0]"
+              :rules="[(val) => val && val > 0]"
               clearable
             >
               <template v-slot:selected-item="scope">
@@ -89,21 +89,17 @@
               dense
               rounded
               outlined
-              v-model="formattedAmount"
+              v-model="formattedPrice"
               :label="`Valor `"
               type="text"
-              @update:model-value="updateAmount"
+              @update:model-value="updatePrice"
               reactive-rules
-              :rules="[(val) => form.amount > 0 || 'Error']"
+              :rules="[(val) => form.price >= 1000 || 'Este campo es obligatorio']"
             />
-            <upload-image
-              :config="{
-                name: 'FOTO_PUNTOS',
-                storage: 'points',
-                modelName: 'points',
-                modelId: 1,
-              }"
-            />
+            <upload-invoice v-model="form.photo" />
+            <div v-if="!form.photo && showError" class="text-red">
+              Campo obligatorio, debes cargar imagen de la factura.
+            </div>
             <q-separator />
             <div class="row text-center q-my-sm">
               <q-btn label="Solicitar puntos" type="submit" color="primary" class="col" rounded />
@@ -120,13 +116,16 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import UploadImage from 'components/common/UploadImage.vue'
+import UploadInvoice from 'components/points/UploadInvoice.vue'
 import { useCommonStore } from '../../stores/common'
+import { usePointStore } from '../../stores/point'
 import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
+const pointStore = usePointStore()
 const $q = useQuasar()
+const emit = defineEmits(['update:value'])
 
 const props = defineProps({
   value: Boolean,
@@ -146,7 +145,9 @@ onMounted(async () => {
 
 const showModal = computed({
   get: () => props.value,
-  set: (val) => val,
+  set: (val) => {
+    emit('update:value', val)
+  },
 })
 
 const initialFormState = {
@@ -154,20 +155,23 @@ const initialFormState = {
   shop_id: '',
   invoice_number: '',
   amount: 0,
+  price: 0,
   description: 'Redimir puntos con compras',
+  photo: null,
 }
 
 const form = reactive({ ...initialFormState })
-const formattedAmount = ref(initialFormState.amount)
+const formattedPrice = ref(initialFormState.price)
+const showError = ref(false)
 
 const showNotification = (messages, status, align, timeout) => {
   showNotifications(messages, status, align, timeout)
 }
 
-const updateAmount = (value) => {
+const updatePrice = (value) => {
   const numericValue = value.replace(/\D/g, '')
-  form.amount = numericValue
-  formattedAmount.value = new Intl.NumberFormat('es-CO').format(numericValue)
+  form.price = numericValue
+  formattedPrice.value = new Intl.NumberFormat('es-CO').format(numericValue)
 }
 
 const optionsShops = computed(() => {
@@ -209,19 +213,33 @@ const user = computed(() => {
   return u
 })
 
+const validateForm = () => {
+  if (!form.photo) {
+    showError.value = true
+  } else {
+    showError.value = false
+  }
+}
+
 const onSubmit = async () => {
+  validateForm()
+  if (showError.value) {
+    return false
+  }
   showLoading('Registrando ...', 'Por favor, espere', true)
   const data = {
     ...form,
+    photo: form.photo.split(',')[1],
     user_id: user.value.user_id,
   }
 
-  await commonStore.changePassword(data)
-  showNotification(commonStore.responseMessages, commonStore.status, 'bottom-right', 5000)
+  await pointStore.save(data)
+  showNotification(pointStore.responseMessages, pointStore.status, 'bottom-right', 5000)
 
-  /* if (commonStore.status) {
-    router.push('/')
-  } */
+  if (pointStore.status) {
+    showModal.value = false
+    await pointStore.listByUserSession('pendiente,aprobado,rechazado,creado')
+  }
   $q.loading.hide()
 }
 

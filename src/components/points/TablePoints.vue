@@ -48,17 +48,25 @@
       :pagination="pagination"
       :rows-per-page-options="[0]"
     />
-    <modal-form-point v-if="showModalPoint" v-model="showModalPoint" />
+    <modal-form-point
+      v-if="showModalPoint"
+      :value="showModalPoint"
+      @update:value="
+        (val) => {
+          showModalPoint = val
+        }
+      "
+    />
   </div>
 </template>
 <script setup>
 import ModalFormPoint from 'components/points/ModalFormPoint.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { useCommonStore } from '../../stores/common'
+import { usePointStore } from '../../stores/point'
 import { showLoading } from '../../helpers/showLoading'
 
-const commonStore = useCommonStore()
+const pointStore = usePointStore()
 const $q = useQuasar()
 
 const showModalPoint = ref(false)
@@ -71,14 +79,14 @@ const pagination = ref({
 onMounted(async () => {
   loading.value = true
   showLoading('Cargando ...', 'Por favor, espere', true)
-  await commonStore.getPoints('pendiente,aprobado,rechazado,creado')
+  await pointStore.listByUserSession('pendiente,aprobado,rechazado,creado')
   $q.loading.hide()
   loading.value = false
 })
 
-const rows = computed(() => commonStore.points)
+const rows = computed(() => pointStore.points)
 const total = computed(() => {
-  return commonStore.points.reduce((acc, item) => acc + item.amount, 0)
+  return pointStore.points.reduce((acc, item) => acc + item.amount, 0)
 })
 const title = computed(() => {
   return `Progrepuntos`
