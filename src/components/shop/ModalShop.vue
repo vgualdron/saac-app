@@ -14,9 +14,7 @@
       </q-card-section>
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
-          <div class="text-caption text-bold">
-            {{ props.shop.agreement }}
-          </div>
+          <div class="text-caption" v-html="props.shop.agreement"></div>
         </q-card-section>
 
         <q-card-section class="col-5 flex flex-center">
