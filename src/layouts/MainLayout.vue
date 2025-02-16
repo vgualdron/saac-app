@@ -7,6 +7,7 @@
         <q-toolbar-title> </q-toolbar-title>
         <q-btn-dropdown
           color="white"
+          ref="refDropdown"
           class="no-shadow"
           push
           no-caps
@@ -17,6 +18,8 @@
             <div class="column items-center">
               <q-avatar size="200px">
                 <upload-image-profile
+                  ref="refUploadImageProfile"
+                  :showClose="user.update_photo"
                   :config="{
                     name: 'FOTO_PROFILE',
                     storage: 'users',
@@ -128,19 +131,18 @@
     </q-drawer>
 
     <q-page-container>
-      <!-- <q-banner class="bg-red-4 text-white q-mt-sm">
-        Debes realizar las siguientes acciones: <br />
-        * Cambiar contraseña. <br />
-        * Definir foto de perfil
-      </q-banner> -->
       <router-view />
     </q-page-container>
-    <form-change-password v-if="showModalPassword" v-model="showModalPassword" />
+    <form-change-password
+      v-if="showModalPassword"
+      v-model="showModalPassword"
+      :showClose="user.update_password"
+    />
   </q-layout>
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, nextTick } from 'vue'
 import { useCommonStore } from '../stores/common'
 import EssentialLink from 'src/components/common/EssentialLink.vue'
 import UploadImageProfile from 'components/common/UploadImageProfile.vue'
@@ -206,10 +208,18 @@ const linksL = [
 const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
 const showModalPassword = ref(false)
+const refDropdown = ref(null)
+const refUploadImageProfile = ref(null)
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await commonStore.getConfigurations()
+  await nextTick()
+  if (!user.value.update_password) {
+    showModalPassword.value = true
+  } else if (!user.value.update_photo) {
+    openDropdownAndInitCamera()
+  }
   $q.loading.hide()
 })
 
@@ -228,6 +238,17 @@ const photo = computed(() => {
     ? `${process.env.URL_FILES}${user.value.user_url_photo_proile}`
     : null
 })
+
+const openDropdownAndInitCamera = async () => {
+  if (refDropdown.value) {
+    refDropdown.value.show()
+
+    await nextTick()
+    if (refUploadImageProfile.value) {
+      refUploadImageProfile.value.initCamera()
+    }
+  }
+}
 
 const truncateText = (text, maxLength) => {
   if (!text) return ''

@@ -24,9 +24,9 @@
     <q-dialog v-model="showModal" persistent>
       <q-card style="max-width: 95vw">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Subir y Recortar</div>
+          <div class="text-h6">Foto de perfil</div>
           <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn icon="close" flat round dense v-close-popup v-if="showClose" />
         </q-card-section>
         <q-separator />
         <q-card-section style="max-height: 60vh" class="scroll">
@@ -80,6 +80,18 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  showClose: {
+    type: Boolean,
+    default: true,
+  },
+})
+
+const initCamera = () => {
+  showModal.value = true
+}
+
+defineExpose({
+  initCamera,
 })
 
 const fileStore = useFileStore()
@@ -99,12 +111,6 @@ onMounted(async () => {
   }
 })
 
-// Función para inicializar el modal y subir la imagen
-const initCamera = () => {
-  showModal.value = true
-}
-
-// Función para manejar la imagen seleccionada
 const handleAdded = (files) => {
   if (files.length > 0) {
     const file = files[0]
@@ -210,6 +216,7 @@ const fetchFile = async () => {
     item.value = response.data
     urlFile.value = `${process.env.URL_FILES}${item.value.url}`
     commonStore.setUserPhoto(item.value.url)
+    commonStore.setUserUpdatePhoto(true)
   }
   isLoading.value = false
 }

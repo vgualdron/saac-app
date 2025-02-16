@@ -35,15 +35,25 @@ const generate = async () => {
     const scaleFactor = Math.min(300 / templateImg.width, 500 / templateImg.height)
     const templateWidth = templateImg.width * scaleFactor
     const templateHeight = templateImg.height * scaleFactor
+    const templateX = (canvas.value.width - templateWidth) / 2
+    const templateY = 0
 
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
-    ctx.drawImage(
-      templateImg,
-      (canvas.value.width - templateWidth) / 2,
-      0,
-      templateWidth,
-      templateHeight,
-    )
+
+    // Sombra para la imagen del template
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)' // Color de la sombra
+    ctx.shadowBlur = 15 // Difuminado de la sombra
+    ctx.shadowOffsetX = 4 // Desplazamiento horizontal
+    ctx.shadowOffsetY = 4 // Desplazamiento vertical
+
+    // Dibujar la imagen del template con sombra
+    ctx.drawImage(templateImg, templateX, templateY, templateWidth, templateHeight)
+
+    // Restaurar el contexto para evitar que otros elementos tengan sombra
+    ctx.shadowColor = 'transparent'
+    ctx.shadowBlur = 0
+    ctx.shadowOffsetX = 0
+    ctx.shadowOffsetY = 0
 
     // Texto "ASOCIADO COOPSERPROG"
     ctx.fillStyle = 'black'
@@ -90,11 +100,11 @@ const generate = async () => {
 
     // QR Code (rectángulo con esquinas redondeadas)
     const qrCanvas = document.createElement('canvas')
-    await QrCode.toCanvas(qrCanvas, client.qr, { width: 60 })
+    await QrCode.toCanvas(qrCanvas, client.qr, { width: 90 })
 
-    const qrX = canvas.value.width - 105
-    const qrY = canvas.value.height - 180
-    const qrSize = 80
+    const qrX = canvas.value.width - 115
+    const qrY = canvas.value.height - 182
+    const qrSize = 90
     const radius = 8 // Radio de las esquinas redondeadas
 
     ctx.save()

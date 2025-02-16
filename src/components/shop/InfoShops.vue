@@ -32,21 +32,54 @@
       </div>
     </div>
     <div class="row q-pl-none text-center">
-      <div class="col-6 text-center is-flex q-pa-sm" v-for="shop in optionsShops" :key="shop.id">
-        <q-card class="my-card" @click="openShop(shop)">
-          <q-item>
-            <q-item-section>
-              <q-item-label caption class="text-bold text-primary">{{ shop.name }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator />
-          <q-card-section horizontal style="">
-            <q-img
-              :src="getUrl(shop.url_logo)"
-              style="width: 100%; height: 100%; object-fit: contain"
-            />
-          </q-card-section>
-        </q-card>
+      <div
+        class="col-12 text-left is-flex text-bold"
+        v-for="(category, index) in optionsShops"
+        :key="category.category_id"
+      >
+        <div
+          :class="{ 'q-mt-xl': index !== 0 && !form.category }"
+          v-if="!form.category || form.category === category.category_id"
+        >
+          <q-chip icon="bookmark" color="primary" text-color="white" class="chip-style" ripple>{{
+            category.category_name
+          }}</q-chip>
+          <div
+            v-if="!form.category || form.category === category.category_id"
+            class="row q-pl-none text-center"
+          >
+            <div
+              class="col-6 text-center is-flex q-pa-sm"
+              v-for="shop in category.shops"
+              :key="shop.id"
+            >
+              <q-card class="my-card" @click="openShop(shop)">
+                <q-item>
+                  <q-item-section>
+                    <q-item-label caption class="text-bold text-primary">{{
+                      shop.name
+                    }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-card-section horizontal style="">
+                  <q-img
+                    :src="getUrl(shop.url_logo)"
+                    style="
+                      width: 65%;
+                      height: 65%;
+                      object-fit: contain;
+                      margin: auto;
+                      border-radius: 50%;
+                      margin-top: 10px;
+                      margin-bottom: 10px;
+                    "
+                  />
+                </q-card-section>
+              </q-card>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <modal-shop v-if="showModalShop" v-model="showModalShop" :shop="shopSelected" />
@@ -78,10 +111,23 @@ onMounted(async () => {
 
 const optionsShops = computed(() => {
   let s = commonStore.shops
-  if (form.category) {
-    s = commonStore.shops.filter((sh) => sh.category_id === form.category)
-  }
-  return s
+  const groupedShops = Object.values(
+    s.reduce((acc, shop) => {
+      const { category_id, category_name, ...shopData } = shop
+
+      if (!acc[category_id]) {
+        acc[category_id] = {
+          category_id,
+          category_name,
+          shops: [],
+        }
+      }
+
+      acc[category_id].shops.push(shopData)
+      return acc
+    }, {}),
+  )
+  return groupedShops
 })
 const optionsCategories = computed(() => {
   return commonStore.categories
@@ -114,5 +160,8 @@ const truncateString = (str, maxLength = 30) => {
   width: 100%;
   height: 150px;
   object-fit: contain;
+}
+.chip-style {
+  width: 100%;
 }
 </style>

@@ -71,4 +71,9 @@ export default {
       method: 'PUT',
       data,
     }),
+  getStatement: (document) =>
+    http({
+      url: `${process.env.URL_API}/statement/${document}`,
+      method: 'GET',
+    }),
 }

@@ -40,7 +40,7 @@
             <div class="row text-center q-mb-md">
               <q-btn label="Cambiar contraseña" type="submit" color="primary" class="col" rounded />
             </div>
-            <div class="row text-center q-mb-sm">
+            <div v-if="showClose" class="row text-center q-mb-sm">
               <q-btn label="Cerrar" color="primary" class="col" rounded outline v-close-popup />
             </div>
           </q-form>
@@ -62,6 +62,10 @@ const $q = useQuasar()
 const router = useRouter()
 
 const props = defineProps({
+  showClose: {
+    type: Boolean,
+    default: true,
+  },
   value: Boolean,
 })
 
@@ -112,7 +116,9 @@ const onSubmit = async () => {
   showNotification(commonStore.responseMessages, commonStore.status, 'bottom-right', 5000)
 
   if (commonStore.status) {
+    commonStore.setUserUpdatePassword(commonStore.status)
     router.push('/')
+    window.location.reload()
   }
   $q.loading.hide()
 }

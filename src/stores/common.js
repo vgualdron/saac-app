@@ -23,6 +23,7 @@ export const useCommonStore = defineStore('common', {
     isLoggedIn: false,
     status: false,
     responseMessages: [],
+    statement: {},
   }),
   getters: {},
   actions: {
@@ -31,6 +32,15 @@ export const useCommonStore = defineStore('common', {
     },
     setUserPhoto(url) {
       this.user.data.user.user_url_photo_proile = url
+    },
+    setUserUpdatePassword(value) {
+      this.user.data.user.update_password = value
+    },
+    setUserUpdatePhoto(value) {
+      this.user.data.user.update_photo = value
+    },
+    setUserCompletedFields(value) {
+      this.user.data.user.completed_fields = value
     },
     async signIn(payload) {
       try {
@@ -245,6 +255,28 @@ export const useCommonStore = defineStore('common', {
         const response = await commonApi.changePassword(payload)
         if (response && response.data && response.data.message) {
           this.responseMessages = response.data.message
+        }
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
+    async getStatement(document) {
+      try {
+        this.status = true
+        const response = await commonApi.getStatement(document)
+        console.log(response)
+        if (response && response.data) {
+          this.statement = response.data
         }
       } catch (error) {
         this.status = false

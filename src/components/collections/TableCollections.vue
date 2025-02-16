@@ -4,7 +4,18 @@
       class="my-sticky-dynamic"
       flat
       bordered
-      title="Recaudos"
+      title="Resumen de aportes y créditos"
+      :rows="rowsResume"
+      :columns="columnsResume"
+      :loading="loading"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
+    />
+    <q-table
+      class="my-sticky-dynamic q-mt-md"
+      flat
+      bordered
+      title="Recaudo de aportes realizados"
       :rows="rows"
       :columns="columns"
       :loading="loading"
@@ -39,11 +50,45 @@ onMounted(async () => {
     document = commonStore.user.data.user.document
   }
   await collectionStore.getCollections(document)
+  await commonStore.getStatement(document)
   $q.loading.hide()
   loading.value = false
 })
 
 const rows = computed(() => collectionStore.collections)
+const rowsResume = computed(() => {
+  const a = [
+    {
+      description: 'Recaudo de Aportes Realizados',
+      amount: commonStore.statement.aportes_realizados.reduce(
+        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        0,
+      ),
+    },
+    {
+      description: 'Cuotas de Aportes Pendientes de Cobro',
+      amount: commonStore.statement.aportes_pendientes.reduce(
+        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        0,
+      ),
+    },
+    {
+      description: 'Recaudo de crédito Realizados',
+      amount: commonStore.statement.cuotas_credito_realizadas.reduce(
+        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        0,
+      ),
+    },
+    {
+      description: 'Cuotas de crédito Pendientes de Cobro',
+      amount: commonStore.statement.cuotas_credito_pendientes.reduce(
+        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        0,
+      ),
+    },
+  ]
+  return a
+})
 
 const columns = [
   {
@@ -76,6 +121,33 @@ const columns = [
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
       return new Date(val).toLocaleDateString('es-ES', options)
     },
+    sortable: true,
+  },
+  {
+    name: 'amount',
+    required: true,
+    label: 'Valor',
+    align: 'left',
+    field: (row) => row.amount,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+]
+
+const columnsResume = [
+  {
+    name: 'description',
+    required: true,
+    label: 'Descripción',
+    align: 'left',
+    field: (row) => row.description,
     sortable: true,
   },
   {
