@@ -54,29 +54,20 @@
               :key="shop.id"
             >
               <q-card class="my-card" @click="openShop(shop)">
-                <q-item>
-                  <q-item-section>
-                    <q-item-label caption class="text-bold text-primary">{{
-                      shop.name
-                    }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-separator />
                 <q-card-section horizontal style="">
                   <q-img
                     :src="getUrl(shop.url_logo)"
-                    style="
-                      width: 65%;
-                      height: 65%;
-                      object-fit: contain;
-                      margin: auto;
-                      border-radius: 50%;
-                      margin-top: 10px;
-                      margin-bottom: 10px;
-                    "
+                    style="width: 100%; object-fit: contain; margin: 10px; border-radius: 50%"
                   />
                 </q-card-section>
               </q-card>
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption class="text-bold text-primary">{{
+                    shop.name
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
             </div>
           </div>
         </div>
@@ -156,9 +147,12 @@ const truncateString = (str, maxLength = 30) => {
 }
 </script>
 <style scoped>
+.my-card {
+  border-radius: 50%;
+  width: 135px;
+  height: 135x;
+}
 .my-card img {
-  width: 100%;
-  height: 150px;
   object-fit: contain;
 }
 .chip-style {
