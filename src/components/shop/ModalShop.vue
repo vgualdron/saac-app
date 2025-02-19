@@ -100,7 +100,7 @@ const messageInfo =
   'Buen%20día%20,%20quiero%20solicitar%20más%20información%20sobre%20el%20comercio%20'
 const messageDomi =
   'Buen%20día%20,%20quiero%20solicitar%20un%20domicilio%20sobre%20el%20comercio%20'
-const numberInfo = '+573228642938'
+const numberInfo = '+573046607622'
 const numberDomi = '+573150666696'
 
 const linkInfo = computed(() => {
