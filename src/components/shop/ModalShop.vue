@@ -7,11 +7,11 @@
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
       <q-separator />
-      <q-card-section horizontal>
+      <!-- <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
           <div class="text-h6 q-mt-sm q-mb-none text-primary">{{ props.shop.name }}</div>
         </q-card-section>
-      </q-card-section>
+      </q-card-section>-->
       <q-card-section horizontal>
         <q-card-section class="q-py-none text-center">
           <q-avatar class="my-avatar q-mb-md">
