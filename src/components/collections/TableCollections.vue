@@ -1,20 +1,20 @@
 <template>
   <div class="q-pa-md q-mb-xl">
     <q-table
+      v-if="rowsResume && rowsResume.length > 0"
       class="my-sticky-dynamic"
-      flat
-      bordered
       title="Resumen de aportes y créditos"
       :rows="rowsResume"
       :columns="columnsResume"
       :loading="loading"
       :pagination="pagination"
       :rows-per-page-options="[0]"
-    />
-    <q-table
-      class="my-sticky-dynamic q-mt-md"
       flat
       bordered
+    />
+    <q-table
+      v-if="rows && rows.length > 0"
+      class="my-sticky-dynamic q-mt-md"
       title="Recaudo de aportes realizados"
       :rows="rows"
       :columns="columns"
@@ -22,7 +22,16 @@
       row-key="index"
       :pagination="pagination"
       :rows-per-page-options="[0]"
-    />
+      flat
+      bordered
+    >
+      <template v-slot:bottom-row>
+        <q-tr>
+          <q-td colspan="3"><strong>Total</strong></q-td>
+          <q-td>{{ formatPrice(totalAportes) }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
   </div>
 </template>
 <script setup>
@@ -56,33 +65,36 @@ onMounted(async () => {
 })
 
 const rows = computed(() => collectionStore.collections)
+const totalAportes = computed(() => {
+  return collectionStore.collections.reduce((total, c) => total + (parseInt(c.amount) || 0), 0)
+})
 const rowsResume = computed(() => {
   const a = [
     {
       description: 'Recaudo de Aportes Realizados',
-      amount: commonStore.statement.aportes_realizados.reduce(
-        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+      amount: collectionStore.collections.reduce(
+        (total, c) => total + (parseInt(c.amount) || 0),
         0,
       ),
     },
     {
       description: 'Cuotas de Aportes Pendientes de Cobro',
       amount: commonStore.statement.aportes_pendientes.reduce(
-        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        (acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0),
         0,
       ),
     },
     {
       description: 'Recaudo de crédito Realizados',
       amount: commonStore.statement.cuotas_credito_realizadas.reduce(
-        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        (acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0),
         0,
       ),
     },
     {
       description: 'Cuotas de crédito Pendientes de Cobro',
       amount: commonStore.statement.cuotas_credito_pendientes.reduce(
-        (acc, aporte) => acc + (aporte.valor_aporte || 0),
+        (acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0),
         0,
       ),
     },
@@ -167,5 +179,14 @@ const columnsResume = [
     sortable: true,
   },
 ]
+
+const formatPrice = (val) => {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(val)
+}
 </script>
 <style scoped></style>
