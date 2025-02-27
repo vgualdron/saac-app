@@ -1,5 +1,4 @@
-// import { boot } from 'quasar'
-import { defineBoot } from '#q-app/wrappers'
+import { defineBoot } from 'quasar/wrappers'
 import { useCommonStore } from 'src/stores/common'
 import axios from 'axios'
 import { Notify } from 'quasar'
