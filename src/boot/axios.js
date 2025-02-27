@@ -1,4 +1,4 @@
-import { defineBoot } from 'quasar/wrappers'
+import { boot } from 'quasar/wrappers'
 import { useCommonStore } from 'src/stores/common'
 import axios from 'axios'
 import { Notify } from 'quasar'
@@ -14,7 +14,7 @@ const api = axios.create({
   timeout: 10000,
   withCredentials: true,
 })
-export default defineBoot(({ app }) => {
+export default boot(({ app }) => {
   const commonStore = useCommonStore()
 
   // Interceptor para añadir el token en cada petición
