@@ -1,9 +1,5 @@
-import { http } from '../../helpers/http'
+import { api } from 'boot/axios'
 
 export default {
-  getCollections: (document) =>
-    http({
-      url: `${process.env.URL_API}/collection/${document}`,
-      method: 'GET',
-    }),
+  getCollections: (document) => api.get(`/collection/${document}`),
 }

@@ -54,11 +54,16 @@ defineProps({
   },
 })
 
-const clickOption = (link) => {
+const clickOption = async (link) => {
+  console.log(link)
   if (typeof link === 'string' && (link.startsWith('http://') || link.startsWith('https://'))) {
     window.open(link, '_blank')
   } else {
-    router.push(link)
+    try {
+      await router.push(link)
+    } catch (error) {
+      console.error('Error al navegar:', error)
+    }
   }
 }
 </script>

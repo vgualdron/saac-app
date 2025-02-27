@@ -67,14 +67,14 @@
           <q-img src="~/assets/logo-rectangle.png" width="260" class="q-mr-auto q-ml-auto" />
         </q-item-label>
         <EssentialLink
-          v-for="{ name, link, title, icon, caption, classes } in linksList"
-          :key="name"
+          v-for="{ link, title, icon, caption, classes } in linksList"
+          :key="link"
           :title="title"
           :link="link"
           :icon="icon"
           :caption="caption"
           :classes="classes"
-          :clickable="link !== $route.path"
+          :clickable="true"
           :active="link === $route.path"
         />
         <q-item-label header class="text-grey-8 text-center q-mt-md">

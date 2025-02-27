@@ -65,41 +65,35 @@ onMounted(async () => {
 })
 
 const rows = computed(() => collectionStore.collections)
+
 const totalAportes = computed(() => {
   return collectionStore.collections.reduce((total, c) => total + (parseInt(c.amount) || 0), 0)
 })
+
 const rowsResume = computed(() => {
-  const a = [
+  const safeReduce = (arr) =>
+    Array.isArray(arr)
+      ? arr.reduce((acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0), 0)
+      : 0
+
+  return [
     {
       description: 'Recaudo de Aportes Realizados',
-      amount: collectionStore.collections.reduce(
-        (total, c) => total + (parseInt(c.amount) || 0),
-        0,
-      ),
+      amount: safeReduce(collectionStore.collections),
     },
     {
       description: 'Cuotas de Aportes Pendientes de Cobro',
-      amount: commonStore.statement.aportes_pendientes.reduce(
-        (acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0),
-        0,
-      ),
+      amount: safeReduce(commonStore.statement?.aportes_pendientes),
     },
     {
       description: 'Recaudo de crédito Realizados',
-      amount: commonStore.statement.cuotas_credito_realizadas.reduce(
-        (acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0),
-        0,
-      ),
+      amount: safeReduce(commonStore.statement?.cuotas_credito_realizadas),
     },
     {
       description: 'Cuotas de crédito Pendientes de Cobro',
-      amount: commonStore.statement.cuotas_credito_pendientes.reduce(
-        (acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0),
-        0,
-      ),
+      amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes),
     },
   ]
-  return a
 })
 
 const columns = [

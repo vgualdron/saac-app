@@ -1,79 +1,31 @@
-import { http } from '../../helpers/http'
+import { api } from 'boot/axios'
 
 export default {
-  session: () =>
-    http({
-      url: `${process.env.URL_API}/api/session/status`,
-      method: 'GET',
-    }),
-  signIn: (data) =>
-    http({
-      url: `${process.env.URL_API}/auth/login`,
-      method: 'POST',
-      data,
-    }),
-  signUp: (data) =>
-    http({
-      url: `${process.env.URL_API}/auth/create`,
-      method: 'POST',
-      data,
-    }),
-  signOut: (data) =>
-    http({
-      url: `${process.env.URL_API}/auth/logout`,
-      method: 'POST',
-      data,
-    }),
-  getCompanies: () =>
-    http({
-      url: `${process.env.URL_API}/company`,
-      method: 'GET',
-    }),
-  getDepartments: () =>
-    http({
-      url: `${process.env.URL_API}/department`,
-      method: 'GET',
-    }),
-  getCities: () =>
-    http({
-      url: `${process.env.URL_API}/city`,
-      method: 'GET',
-    }),
-  getCreditLines: () =>
-    http({
-      url: `${process.env.URL_API}/credit-line`,
-      method: 'GET',
-    }),
-  getConfigurations: () =>
-    http({
-      url: `${process.env.URL_API}/configuration`,
-      method: 'GET',
-    }),
-  getCategories: () =>
-    http({
-      url: `${process.env.URL_API}/category`,
-      method: 'GET',
-    }),
-  getShops: () =>
-    http({
-      url: `${process.env.URL_API}/shop`,
-      method: 'GET',
-    }),
-  sendPqr: (data) =>
-    http({
-      url: `${process.env.URL_API}/pqr`,
-      method: 'POST',
-      data,
-    }),
-  changePassword: (data) =>
-    http({
-      url: `${process.env.URL_API}/user/update-profile/${data.id}`,
-      method: 'PUT',
-      data,
-    }),
-  getStatement: (document) =>
-    http({
-      url: `${process.env.URL_API}/statement/${document}`,
-      method: 'GET',
-    }),
+  session: () => api.get('/api/session/status'),
+
+  signIn: (data) => api.post('/auth/login', data),
+
+  signUp: (data) => api.post('/auth/create', data),
+
+  signOut: (data) => api.post('/auth/logout', data),
+
+  getCompanies: () => api.get('/company'),
+
+  getDepartments: () => api.get('/department'),
+
+  getCities: () => api.get('/city'),
+
+  getCreditLines: () => api.get('/credit-line'),
+
+  getConfigurations: () => api.get('/configuration'),
+
+  getCategories: () => api.get('/category'),
+
+  getShops: () => api.get('/shop'),
+
+  sendPqr: (data) => api.post('/pqr', data),
+
+  changePassword: (data) => api.put(`/user/update-profile/${data.id}`, data),
+
+  getStatement: (document) => api.get(`/statement/${document}`),
 }

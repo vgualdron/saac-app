@@ -62,6 +62,11 @@ export const useCommonStore = defineStore('common', {
         }
       }
     },
+    logout() {
+      this.isLoggedIn = false
+      this.status = true
+      this.user = null
+    },
     async signUp(payload) {
       try {
         this.status = true
@@ -274,7 +279,6 @@ export const useCommonStore = defineStore('common', {
       try {
         this.status = true
         const response = await commonApi.getStatement(document)
-        console.log(response)
         if (response && response.data) {
           this.statement = response.data
         }

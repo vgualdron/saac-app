@@ -1,27 +1,11 @@
-import { http } from '../../helpers/http'
+import { api } from 'boot/axios'
 
 export default {
-  save: (data) =>
-    http({
-      url: `${process.env.URL_API}/file/create`,
-      method: 'POST',
-      data,
-    }),
-  get: (data) =>
-    http({
-      url: `${process.env.URL_API}/file/get`,
-      method: 'POST',
-      data,
-    }),
-  update: (data) =>
-    http({
-      url: `${process.env.URL_API}/file/update/${data.id}`,
-      method: 'PUT',
-      data,
-    }),
-  delete: (id) =>
-    http({
-      url: `${process.env.URL_API}/file/delete/${id}`,
-      method: 'DELETE',
-    }),
+  save: (data) => api.post('/file/create', data),
+
+  get: (data) => api.post('/file/get', data),
+
+  update: (data) => api.put(`/file/update/${data.id}`, data),
+
+  delete: (id) => api.delete(`/file/delete/${id}`),
 }

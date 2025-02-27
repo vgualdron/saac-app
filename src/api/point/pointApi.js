@@ -1,31 +1,13 @@
-import { http } from '../../helpers/http'
+import { api } from 'boot/axios'
 
 export default {
-  save: (data) =>
-    http({
-      url: `${process.env.URL_API}/point`,
-      method: 'POST',
-      data,
-    }),
-  listByUserSession: (data) =>
-    http({
-      url: `${process.env.URL_API}/point/by-user-session/${data}`,
-      method: 'GET',
-    }),
-  list: (status) =>
-    http({
-      url: `${process.env.URL_API}/point/${status}`,
-      method: 'GET',
-    }),
-  update: (data) =>
-    http({
-      url: `${process.env.URL_API}/point/${data.id}`,
-      method: 'PUT',
-      data,
-    }),
-  delete: (id) =>
-    http({
-      url: `${process.env.URL_API}/point/${id}`,
-      method: 'DELETE',
-    }),
+  save: (data) => api.post('/point', data),
+
+  listByUserSession: (userId) => api.get(`/point/by-user-session/${userId}`),
+
+  list: (status) => api.get(`/point/${status}`),
+
+  update: (data) => api.put(`/point/${data.id}`, data),
+
+  delete: (id) => api.delete(`/point/${id}`),
 }

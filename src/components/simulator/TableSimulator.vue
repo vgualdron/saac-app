@@ -347,8 +347,8 @@ const formatPriceDecimal = (value) => {
 onMounted(async () => {
   loading.value = true
   showLoading('Cargando ...', 'Por favor, espere', true)
-  form.creditLine = optionsCreditLines.value[0]
   await commonStore.getCreditLines()
+  form.creditLine = optionsCreditLines.value[0]
   $q.loading.hide()
   loading.value = false
 })
