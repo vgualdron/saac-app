@@ -62,7 +62,7 @@ import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading } from '../../helpers/showLoading'
 
 // Importar la imagen de fondo
-import backgroundImage from '../../assets/background_1.png'
+import backgroundImage from '../../assets/back.jpeg'
 
 const commonStore = useCommonStore()
 const $q = useQuasar()
@@ -85,6 +85,7 @@ const backgroundStyle = computed(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  opacity: 0.8,
 }))
 
 const onSubmit = async () => {
