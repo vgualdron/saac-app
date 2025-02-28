@@ -4,7 +4,7 @@
     <info-shops v-else-if="tab === 'shops'" />
     <table-points v-else-if="tab === 'points'" />
     <div v-else-if="tab === 'status'">
-      <status-player v-if="showStatusPlayer" :statuses="statuses" @close="finishStatus" />
+      <status-player v-if="showStatusPlayer" @close="finishStatus" />
     </div>
     <q-tabs
       v-model="tab"

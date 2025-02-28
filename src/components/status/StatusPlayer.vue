@@ -73,6 +73,7 @@ const progress = ref(0)
 const isMuted = ref(false)
 const isPaused = ref(false)
 const showLoader = ref(false)
+const imageTimeout = ref(null)
 
 const emit = defineEmits(['close'])
 
@@ -126,7 +127,9 @@ const playFile = async () => {
     }
   } else if (currentFile.value.type === 'image') {
     progress.value = 1
-    setTimeout(nextStatus, 5000) // Mostrar imagen por 10s
+    showLoader.value = false // 🔹 Ocultar loader para imágenes
+    clearTimeout(imageTimeout.value)
+    imageTimeout.value = setTimeout(nextStatus, 5000) // Mostrar imagen por 5s
   }
 }
 
