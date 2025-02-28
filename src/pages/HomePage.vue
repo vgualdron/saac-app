@@ -43,11 +43,6 @@ const tabs = [
   { name: 'points', icon: 'loyalty', label: 'Progrepuntos', disable: false },
   { name: 'repayments', icon: 'currency_exchange', label: 'Adelantos', disable: true },
 ]
-const statuses = ref([
-  { url: 'https://saac.com.co/api/storage/app/public/resources/video_1.mp4' },
-  { url: 'https://saac.com.co/api/storage/app/public/resources/video_2.mp4' },
-  { url: 'https://saac.com.co/api/storage/app/public/resources/video_3.mp4' },
-])
 
 const finishStatus = () => {
   tab.value = 'shops'

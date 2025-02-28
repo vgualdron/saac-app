@@ -13,6 +13,7 @@ export const useFileStore = defineStore('file', {
   },
   state: () => ({
     file: {},
+    statusesToday: [],
     status: false,
     responseMessages: [],
   }),
@@ -24,6 +25,27 @@ export const useFileStore = defineStore('file', {
     async getFile(payload) {
       const response = await fileApi.get(payload)
       return response.data
+    },
+    async listStatusesToday() {
+      try {
+        const response = await fileApi.listStatusesToday()
+        if (response && response.data && response.data.data) {
+          this.statusesToday = response.data.data
+          this.responseMessages = response.data.message
+        }
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
     },
     async saveFile(payload) {
       try {

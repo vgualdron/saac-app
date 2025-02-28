@@ -1,8 +1,8 @@
 <template>
-  <div class="status-player">
+  <div v-if="isLoaded" class="status-player">
     <!-- Barra de progreso -->
     <div class="status-progress">
-      <div v-for="(status, index) in statuses" :key="index" class="status-indicator">
+      <div v-for="(status, index) in fileStore.statusesToday" :key="index" class="status-indicator">
         <div
           class="status-fill"
           :style="{
@@ -19,8 +19,9 @@
 
     <div class="status-container" @click="togglePause">
       <video
+        v-if="currentFile.type === 'video'"
         ref="video"
-        :src="statuses[currentStatus].url"
+        :src="getUrl(currentFile.url)"
         @timeupdate="updateProgress"
         @ended="nextStatus"
         @waiting="showLoader = true"
@@ -29,6 +30,12 @@
         playsinline
         :muted="isMuted"
       ></video>
+
+      <img
+        v-else-if="currentFile.type === 'image'"
+        :src="getUrl(currentFile.url)"
+        class="status-image"
+      />
 
       <!-- Loader -->
       <div v-if="showLoader" class="loader">
@@ -45,42 +52,46 @@
     </button>
 
     <!-- Botón de mute -->
-    <button class="mute-button" @click.stop="toggleMute">
+    <button class="mute-button" @click.stop="toggleMute" v-if="currentFile.type === 'video'">
       <span class="material-icons">{{ isMuted ? 'volume_off' : 'volume_up' }}</span>
     </button>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, watch, nextTick, computed } from 'vue'
+import { useQuasar } from 'quasar'
+import { useFileStore } from '../../stores/file'
+import { showLoading } from '../../helpers/showLoading'
 
-const props = defineProps({
-  statuses: {
-    type: Array,
-    required: true,
-  },
-})
-
-const emit = defineEmits(['close'])
+const fileStore = useFileStore()
+const $q = useQuasar()
+const isLoaded = ref(false)
 const video = ref(null)
 const currentStatus = ref(0)
 const progress = ref(0)
 const isMuted = ref(false)
 const isPaused = ref(false)
-const showLoader = ref(false) // Muestra el loader mientras el video carga
+const showLoader = ref(false)
+
+const emit = defineEmits(['close'])
+
+const currentFile = computed(() => fileStore.statusesToday[currentStatus.value] || {})
 
 const updateProgress = () => {
-  if (video.value instanceof HTMLVideoElement && video.value.duration) {
+  if (currentFile.value.type === 'image') {
+    progress.value = 1
+  } else if (video.value instanceof HTMLVideoElement && video.value.duration) {
     progress.value = video.value.currentTime / video.value.duration
   }
 }
 
 const nextStatus = async () => {
-  if (currentStatus.value < props.statuses.length - 1) {
+  if (currentStatus.value < fileStore.statusesToday.length - 1) {
     currentStatus.value++
     progress.value = 0
     showLoader.value = true
-    await playVideo()
+    await playFile()
   } else {
     closeStatus()
   }
@@ -91,7 +102,7 @@ const prevStatus = async () => {
     currentStatus.value--
     progress.value = 0
     showLoader.value = true
-    await playVideo()
+    await playFile()
   }
 }
 
@@ -99,9 +110,13 @@ const closeStatus = () => {
   emit('close')
 }
 
-const playVideo = async () => {
+const getUrl = (url) => {
+  return `${process.env.URL_FILES}${url}`
+}
+
+const playFile = async () => {
   await nextTick()
-  if (video.value instanceof HTMLVideoElement) {
+  if (currentFile.value.type === 'video' && video.value instanceof HTMLVideoElement) {
     try {
       await video.value.play()
       isPaused.value = false
@@ -109,6 +124,9 @@ const playVideo = async () => {
     } catch (err) {
       console.error('Error al reproducir el video:', err)
     }
+  } else if (currentFile.value.type === 'image') {
+    progress.value = 1
+    setTimeout(nextStatus, 5000) // Mostrar imagen por 10s
   }
 }
 
@@ -117,45 +135,43 @@ const toggleMute = () => {
 }
 
 const togglePause = () => {
-  if (isPaused.value) {
-    playVideo()
-  } else {
-    video.value.pause()
-    isPaused.value = true
+  if (currentFile.value.type === 'video') {
+    if (isPaused.value) {
+      playFile()
+    } else {
+      video.value.pause()
+      isPaused.value = true
+    }
   }
 }
 
-onMounted(() => {
-  playVideo()
+onMounted(async () => {
+  showLoading('Cargando ...', 'Por favor, espere', true)
+  await fileStore.listStatusesToday()
+  $q.loading.hide()
+  isLoaded.value = true
+  playFile()
 })
 
 watch(currentStatus, () => {
-  playVideo()
+  playFile()
 })
 </script>
 
 <style scoped>
+video,
+.status-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .status-player {
   position: relative;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  background: rgba(0, 0, 0, 0.5);
   overflow: hidden;
   cursor: pointer;
-}
-
-.status-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-video {
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .status-progress {
@@ -182,38 +198,36 @@ video {
   transition: width 0.2s ease;
 }
 
-.nav-button,
-.mute-button {
+.nav-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
-  color: white;
   border: none;
-  border-radius: 50%;
-  padding: 10px;
-  font-size: 24px;
+  color: white;
   cursor: pointer;
   z-index: 20;
+  font-size: 48px;
 }
 
 .nav-button.left {
-  left: 10px;
-  top: 50%;
+  left: 20px;
 }
 
 .nav-button.right {
-  right: 10px;
-  top: 50%;
+  right: 20px;
 }
 
 .mute-button {
-  top: 10px;
-  right: 10px;
-}
-
-.material-icons {
-  font-size: 24px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 20;
+  font-size: 28px;
+  background: transparent;
 }
 
 .loader {
@@ -229,12 +243,10 @@ video {
   color: white;
   font-size: 48px;
   z-index: 30;
-  text-align: center; /* Asegura el centrado horizontal */
 }
 
 .rotating {
   animation: rotation 1s infinite linear;
-  display: inline-block; /* Necesario para asegurar que el ícono se centre dentro del flexbox */
 }
 
 @keyframes rotation {
