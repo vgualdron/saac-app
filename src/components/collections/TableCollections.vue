@@ -11,9 +11,18 @@
       :rows-per-page-options="[0]"
       flat
       bordered
-    />
+      row-key="description"
+    >
+      <template v-slot:body="props">
+        <q-tr :props="props" @click="scrollToTable(props.rowIndex)" class="clickable-row">
+          <q-td key="description">{{ props.row.description }}</q-td>
+          <q-td key="amount">{{ formatPrice(props.row.amount) }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
     <q-table
       v-if="rows && rows.length > 0"
+      id="table1"
       class="my-sticky-dynamic q-mt-md"
       title="Recaudo de aportes realizados"
       :rows="rows"
@@ -28,7 +37,70 @@
       <template v-slot:bottom-row>
         <q-tr>
           <q-td colspan="3"><strong>Total</strong></q-td>
-          <q-td>{{ formatPrice(totalAportes) }}</q-td>
+          <q-td>{{ formatPrice(totalRows) }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
+    <q-table
+      v-if="rows2 && rows2.length > 0"
+      id="table2"
+      class="my-sticky-dynamic q-mt-md"
+      title="Cuotas de Aportes Pendientes de Cobro"
+      :rows="rows2"
+      :columns="columns2"
+      :loading="loading"
+      row-key="index"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
+      flat
+      bordered
+    >
+      <template v-slot:bottom-row>
+        <q-tr>
+          <q-td colspan="3"><strong>Total</strong></q-td>
+          <q-td>{{ formatPrice(totalRows2) }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
+    <q-table
+      v-if="rows3 && rows3.length > 0"
+      id="table3"
+      class="my-sticky-dynamic q-mt-md"
+      title="Recaudo de crédito Realizados"
+      :rows="rows3"
+      :columns="columns3"
+      :loading="loading"
+      row-key="index"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
+      flat
+      bordered
+    >
+      <template v-slot:bottom-row>
+        <q-tr>
+          <q-td colspan="3"><strong>Total</strong></q-td>
+          <q-td>{{ formatPrice(totalRows3) }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
+    <q-table
+      v-if="rows4 && rows4.length > 0"
+      id="table4"
+      class="my-sticky-dynamic q-mt-md"
+      title="Cuotas de crédito Pendientes de Cobro"
+      :rows="rows4"
+      :columns="columns4"
+      :loading="loading"
+      row-key="index"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
+      flat
+      bordered
+    >
+      <template v-slot:bottom-row>
+        <q-tr>
+          <q-td colspan="3"><strong>Total</strong></q-td>
+          <q-td>{{ formatPrice(totalRows4) }}</q-td>
         </q-tr>
       </template>
     </q-table>
@@ -64,88 +136,29 @@ onMounted(async () => {
   loading.value = false
 })
 
-const rows = computed(() => collectionStore.collections)
-
-const totalAportes = computed(() => {
-  return collectionStore.collections.reduce((total, c) => total + (parseInt(c.amount) || 0), 0)
-})
-
 const rowsResume = computed(() => {
-  const safeReduce = (arr) =>
-    Array.isArray(arr)
-      ? arr.reduce((acc, aporte) => acc + (parseInt(aporte.valor_aporte) || 0), 0)
-      : 0
+  const safeReduce = (arr, field) =>
+    Array.isArray(arr) ? arr.reduce((acc, aporte) => acc + (parseInt(aporte[field]) || 0), 0) : 0
 
   return [
     {
       description: 'Recaudo de Aportes Realizados',
-      amount: safeReduce(collectionStore.collections),
+      amount: safeReduce(commonStore.statement?.aportes_realizados, 'valor_aporte'),
     },
     {
       description: 'Cuotas de Aportes Pendientes de Cobro',
-      amount: safeReduce(commonStore.statement?.aportes_pendientes),
+      amount: safeReduce(commonStore.statement?.aportes_pendientes, 'total_aportes'),
     },
     {
       description: 'Recaudo de crédito Realizados',
-      amount: safeReduce(commonStore.statement?.cuotas_credito_realizadas),
+      amount: safeReduce(commonStore.statement?.cuotas_credito_realizadas, 'valor_cuota_credito'),
     },
     {
       description: 'Cuotas de crédito Pendientes de Cobro',
-      amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes),
+      amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes, 'total_cuotas_credito'),
     },
   ]
 })
-
-const columns = [
-  {
-    name: 'index',
-    label: '#',
-    field: 'index',
-    align: 'left',
-  },
-  {
-    name: 'period_name',
-    required: true,
-    label: 'Periodo',
-    align: 'left',
-    field: (row) => row.period_name,
-    format: (val) => {
-      if (!val) return ''
-      const [month, year] = val.split(' ')
-      const abbreviatedMonth = month.substring(0, 3)
-      return `${abbreviatedMonth} ${year}`
-    },
-    sortable: true,
-  },
-  {
-    name: 'date',
-    required: true,
-    label: 'Fecha',
-    align: 'left',
-    field: (row) => row.date,
-    format: (val) => {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
-      return new Date(val).toLocaleDateString('es-ES', options)
-    },
-    sortable: true,
-  },
-  {
-    name: 'amount',
-    required: true,
-    label: 'Valor',
-    align: 'left',
-    field: (row) => row.amount,
-    format: (val) => {
-      return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(val)
-    },
-    sortable: true,
-  },
-]
 
 const columnsResume = [
   {
@@ -154,7 +167,7 @@ const columnsResume = [
     label: 'Descripción',
     align: 'left',
     field: (row) => row.description,
-    sortable: true,
+    sortable: false,
   },
   {
     name: 'amount',
@@ -170,9 +183,213 @@ const columnsResume = [
         maximumFractionDigits: 0,
       }).format(val)
     },
+    sortable: false,
+  },
+]
+
+const rows = computed(() => commonStore.statement?.aportes_realizados)
+
+const totalRows = computed(() => {
+  return rows.value.reduce((total, c) => total + (parseInt(c.valor_aporte) || 0), 0)
+})
+
+const columns = [
+  {
+    name: 'periodo_nombre',
+    required: true,
+    label: 'Periodo',
+    align: 'left',
+    field: (row) => row.periodo_nombre,
+    sortable: true,
+  },
+  {
+    name: 'linea_aporte_nombre',
+    required: true,
+    label: 'Linea aporte',
+    align: 'left',
+    field: (row) => row.linea_aporte_nombre,
+    sortable: true,
+  },
+  {
+    name: 'fecha_recaudo',
+    required: true,
+    label: 'Fecha',
+    align: 'left',
+    field: (row) => row.fecha_recaudo,
+    sortable: true,
+  },
+  {
+    name: 'valor_aporte',
+    required: true,
+    label: 'Valor',
+    align: 'left',
+    field: (row) => row.valor_aporte,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
     sortable: true,
   },
 ]
+
+const rows2 = computed(() => commonStore.statement?.aportes_pendientes)
+
+const totalRows2 = computed(() => {
+  return rows2.value.reduce((total, c) => total + (parseInt(c.total_aportes) || 0), 0)
+})
+
+const columns2 = [
+  {
+    name: 'periodo_nombre',
+    required: true,
+    label: 'Periodo',
+    align: 'left',
+    field: (row) => row.periodo_nombre,
+    sortable: true,
+  },
+  {
+    name: 'linea_aporte_nombre',
+    required: true,
+    label: 'Linea aporte',
+    align: 'left',
+    field: (row) => row.linea_aporte_nombre,
+    sortable: true,
+  },
+  {
+    name: 'comentario',
+    required: true,
+    label: 'Comentario',
+    align: 'left',
+    field: (row) => row.comentario,
+    sortable: true,
+  },
+  {
+    name: 'valor_aporte',
+    required: true,
+    label: 'Valor',
+    align: 'left',
+    field: (row) => row.total_aportes,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+]
+
+const rows3 = computed(() => commonStore.statement?.cuotas_credito_realizadas)
+
+const totalRows3 = computed(() => {
+  return rows3.value.reduce((total, c) => total + (parseInt(c.valor_cuota_credito) || 0), 0)
+})
+
+const columns3 = [
+  {
+    name: 'periodo_nombre',
+    required: true,
+    label: 'Periodo',
+    align: 'left',
+    field: (row) => row.periodo_nombre,
+    sortable: true,
+  },
+  {
+    name: 'linea_credito_nombre',
+    required: true,
+    label: 'Linea de crédito',
+    align: 'left',
+    field: (row) => row.linea_credito_nombre,
+    sortable: true,
+  },
+  {
+    name: 'fecha_recaudo',
+    required: true,
+    label: 'Fecha',
+    align: 'left',
+    field: (row) => row.fecha_recaudo,
+    sortable: true,
+  },
+  {
+    name: 'valor_cuota_credito',
+    required: true,
+    label: 'Valor',
+    align: 'left',
+    field: (row) => row.valor_cuota_credito,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+]
+
+const rows4 = computed(() => commonStore.statement?.cuotas_credito_pendientes)
+
+const totalRows4 = computed(() => {
+  return rows4.value.reduce((total, c) => total + (parseInt(c.total_cuotas_credito) || 0), 0)
+})
+
+const columns4 = [
+  {
+    name: 'periodo_nombre',
+    required: true,
+    label: 'Periodo',
+    align: 'left',
+    field: (row) => row.periodo_nombre,
+    sortable: true,
+  },
+  {
+    name: 'linea_credito_nombre',
+    required: true,
+    label: 'Linea de crédito',
+    align: 'left',
+    field: (row) => row.linea_credito_nombre,
+    sortable: true,
+  },
+  {
+    name: 'comentario',
+    required: true,
+    label: 'Comentario',
+    align: 'left',
+    field: (row) => row.comentario,
+    sortable: true,
+  },
+  {
+    name: 'valor_aporte',
+    required: true,
+    label: 'Valor',
+    align: 'left',
+    field: (row) => row.total_cuotas_credito,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+]
+
+const scrollToTable = (index) => {
+  const tableIds = ['table1', 'table2', 'table3', 'table4']
+  const target = document.getElementById(tableIds[index])
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
 
 const formatPrice = (val) => {
   return new Intl.NumberFormat('es-CO', {
@@ -183,4 +400,13 @@ const formatPrice = (val) => {
   }).format(val)
 }
 </script>
-<style scoped></style>
+<style lang="sass">
+.my-sticky-dynamic
+  .q-table__top
+    background-color: #D0E2B6
+
+.clickable-row
+  cursor: pointer
+  &:hover
+    background-color: rgba(0, 0, 0, 0.1)
+</style>
