@@ -138,6 +138,7 @@
       v-model="showModalPassword"
       :showClose="user.update_password"
     />
+    <modal-paid v-if="showModalPaid" v-model="showModalPaid" :showClose="false" />
   </q-layout>
 </template>
 
@@ -147,6 +148,7 @@ import { useCommonStore } from '../stores/common'
 import EssentialLink from 'src/components/common/EssentialLink.vue'
 import UploadImageProfile from 'components/common/UploadImageProfile.vue'
 import FormChangePassword from 'components/common/FormChangePassword.vue'
+import ModalPaid from 'components/common/ModalPaid.vue'
 import { showLoading } from '../helpers/showLoading'
 import { useQuasar } from 'quasar'
 
@@ -208,6 +210,7 @@ const linksL = [
 const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
 const showModalPassword = ref(false)
+const showModalPaid = ref(false)
 const refDropdown = ref(null)
 const refUploadImageProfile = ref(null)
 
@@ -215,7 +218,9 @@ onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await commonStore.getConfigurations()
   await nextTick()
-  if (!user.value.update_password) {
+  if (!user.value.payment_date) {
+    showModalPaid.value = true
+  } else if (!user.value.update_password) {
     showModalPassword.value = true
   } else if (!user.value.update_photo) {
     openDropdownAndInitCamera()
