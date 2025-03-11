@@ -104,6 +104,27 @@
         </q-tr>
       </template>
     </q-table>
+    <q-table
+      v-if="rows5 && rows5.length > 0"
+      id="table5"
+      class="my-sticky-dynamic q-mt-md"
+      title="Cuotas de crédito Pendientes de Cobro a Futuro"
+      :rows="rows5"
+      :columns="columns5"
+      :loading="loading"
+      row-key="index"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
+      flat
+      bordered
+    >
+      <template v-slot:bottom-row>
+        <q-tr>
+          <q-td colspan="3"><strong>Total</strong></q-td>
+          <q-td>{{ formatPrice(totalRows5) }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
   </div>
 </template>
 <script setup>
@@ -156,6 +177,10 @@ const rowsResume = computed(() => {
     {
       description: 'Cuotas de crédito Pendientes de Cobro',
       amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes, 'total_cuotas_credito'),
+    },
+    {
+      description: 'Cuotas de Créditos Pendientes de Cobro a Futuro',
+      amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes_futuro, 'valor_cuota'),
     },
   ]
 })
@@ -383,8 +408,113 @@ const columns4 = [
   },
 ]
 
+const rows5 = computed(() => commonStore.statement?.cuotas_credito_pendientes_futuro)
+
+const totalRows5 = computed(() => {
+  return rows5.value.reduce((total, c) => total + (parseInt(c.valor_cuota) || 0), 0)
+})
+
+const columns5 = [
+  {
+    name: 'cuota',
+    required: true,
+    label: 'Cuota',
+    align: 'left',
+    field: (row) => row.cuota,
+    sortable: true,
+  },
+  {
+    name: 'fecha_corte',
+    required: true,
+    label: 'Fecha',
+    align: 'left',
+    field: (row) => row.fecha_corte,
+    sortable: true,
+  },
+  {
+    name: 'linea_credito_nombre',
+    required: true,
+    label: 'Linea de crédito',
+    align: 'left',
+    field: (row) => row.linea_credito_nombre,
+    sortable: true,
+  },
+  {
+    name: 'valor_saldo',
+    required: true,
+    label: 'Saldo',
+    align: 'left',
+    field: (row) => row.valor_saldo,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+  {
+    name: 'interes',
+    required: true,
+    label: 'Interes',
+    align: 'left',
+    field: (row) => row.interes,
+    sortable: true,
+  },
+  {
+    name: 'seguro_deudor',
+    required: true,
+    label: 'S. Deudor',
+    align: 'left',
+    field: (row) => row.seguro_deudor,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+  {
+    name: 'seguro_credito',
+    required: true,
+    label: 'S. Crédito',
+    align: 'left',
+    field: (row) => row.seguro_credito,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+  {
+    name: 'capital',
+    required: true,
+    label: 'Capital',
+    align: 'left',
+    field: (row) => row.capital,
+    format: (val) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(val)
+    },
+    sortable: true,
+  },
+]
+
 const scrollToTable = (index) => {
-  const tableIds = ['table1', 'table2', 'table3', 'table4']
+  const tableIds = ['table1', 'table2', 'table3', 'table4', 'table5']
   const target = document.getElementById(tableIds[index])
   if (target) {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' })
