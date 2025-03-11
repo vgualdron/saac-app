@@ -55,6 +55,9 @@
     <button class="mute-button" @click.stop="toggleMute" v-if="currentFile.type === 'video'">
       <span class="material-icons">{{ isMuted ? 'volume_off' : 'volume_up' }}</span>
     </button>
+    <button class="download-button" @click.stop="downloadFile">
+      <span class="material-icons">download</span>
+    </button>
   </div>
 </template>
 
@@ -148,6 +151,16 @@ const togglePause = () => {
   }
 }
 
+const formatLinkRoute = (url) => {
+  return `${process.env.URL_FILES}${url}`
+}
+
+const downloadFile = async () => {
+  const fileUrl = formatLinkRoute(currentFile.value.url)
+  const url = `${process.env.URL_API}/download-file-from-url?type=${currentFile.value.type}&extension=${currentFile.value.extension}&url=${fileUrl}`
+  window.open(url, '_blank')
+}
+
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await fileStore.listStatusesToday()
@@ -225,6 +238,18 @@ video,
   position: absolute;
   top: 20px;
   right: 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 20;
+  font-size: 28px;
+  background: transparent;
+}
+
+.download-button {
+  position: absolute;
+  top: 20px;
+  right: 60px;
   color: white;
   border: none;
   cursor: pointer;

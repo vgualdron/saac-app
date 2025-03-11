@@ -1,7 +1,8 @@
 <template>
   <div class="q-pa-md" style="max-width: 400px; margin: auto">
+    <q-img src="pse.png" class="image-pse" @click="openPse" />
     <q-card class="my-card" flat bordered>
-      <q-img src="https://saac.com.co/api/storage/app/public/resources/numeros_cuentas.jpeg" />
+      <q-img src="accounts.jpg" />
     </q-card>
     <q-card class="my-card q-mt-xl" flat bordered>
       <q-list>
@@ -79,10 +80,25 @@ import { getConfigurationParam } from '../../helpers/getConfigurationParam'
 const getParam = (ref) => {
   return getConfigurationParam(ref).value
 }
+
+const openPse = () => {
+  const url = 'https://portalpagos.davivienda.com/#/comercio/10781/COOPSERPROG'
+  if (url) {
+    window.open(url, '_blank')
+  } else {
+    console.error('La URL no está definida')
+  }
+}
 </script>
 <style scoped>
 .my-card {
   width: 100%;
   max-width: 450px;
+}
+.image-pse {
+  width: 90%;
+  margin: 0px 10px 10px 10px;
+  text-align: center;
+  cursor: pointer;
 }
 </style>
