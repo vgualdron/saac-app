@@ -120,7 +120,7 @@
     >
       <template v-slot:bottom-row>
         <q-tr>
-          <q-td colspan="3"><strong>Total</strong></q-td>
+          <q-td colspan="7"><strong>Total</strong></q-td>
           <q-td>{{ formatPrice(totalRows5) }}</q-td>
         </q-tr>
       </template>
