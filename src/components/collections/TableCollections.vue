@@ -180,7 +180,7 @@ const rowsResume = computed(() => {
     },
     {
       description: 'Cuotas de Créditos Pendientes de Cobro a Futuro',
-      amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes_futuro, 'valor_cuota'),
+      amount: safeReduce(commonStore.statement?.cuotas_credito_pendientes_futuro, 'capital'),
     },
   ]
 })
@@ -411,7 +411,7 @@ const columns4 = [
 const rows5 = computed(() => commonStore.statement?.cuotas_credito_pendientes_futuro)
 
 const totalRows5 = computed(() => {
-  return rows5.value.reduce((total, c) => total + (parseInt(c.valor_cuota) || 0), 0)
+  return rows5.value.reduce((total, c) => total + (parseInt(c.capital) || 0), 0)
 })
 
 const columns5 = [

@@ -852,7 +852,6 @@ const showNotification = (messages, status, align, timeout) => {
 }
 
 const login = () => {
-  console.log(form)
   router.push('/')
 }
 
