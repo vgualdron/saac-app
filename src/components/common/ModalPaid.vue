@@ -19,6 +19,12 @@
           <info-paid></info-paid>
         </q-card-section>
       </q-card-section>
+      <q-separator />
+      <q-card-section horizontal>
+        <q-card-section class="col-12 text-right">
+          <q-btn label="Salir" @click="$router.push('/logout')" color="red" class="col" rounded />
+        </q-card-section>
+      </q-card-section>
     </q-card>
   </q-dialog>
 </template>

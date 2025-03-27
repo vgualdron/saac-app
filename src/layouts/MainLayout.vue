@@ -211,6 +211,7 @@ const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
 const showModalPassword = ref(false)
 const showModalPaid = ref(false)
+const showModalCompleteData = ref(false)
 const refDropdown = ref(null)
 const refUploadImageProfile = ref(null)
 
@@ -224,6 +225,8 @@ onMounted(async () => {
     showModalPassword.value = true
   } else if (!user.value.update_photo) {
     openDropdownAndInitCamera()
+  } else if (!user.value.completed_fields) {
+    showModalCompleteData.value = true
   }
   $q.loading.hide()
 })

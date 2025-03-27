@@ -11,6 +11,8 @@
             <div class="row text-center">
               <div class="col-12 q-pl-none text-center">
                 <q-select
+                  use-input
+                  fill-input
                   dense
                   rounded
                   outlined
@@ -20,12 +22,13 @@
                   v-model="form.company_id"
                   label="Empresa *"
                   input-debounce="0"
-                  :options="optionsCompanies"
+                  :options="filteredCompanies"
                   option-value="id"
                   option-label="name"
                   behavior="menu"
                   reactive-rules
                   :rules="[(val) => val || 'Obligatorio']"
+                  @filter="filterCompanies"
                 >
                   <template v-slot:selected-item="scope">
                     <span>
@@ -788,7 +791,7 @@
   </div>
 </template>
 <script setup>
-import { reactive, onMounted, computed, watch } from 'vue'
+import { reactive, onMounted, computed, watch, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
@@ -859,12 +862,34 @@ const onReset = () => {
   Object.assign(form, initialFormState)
 }
 
+const optionsCompanies = computed(() => {
+  return commonStore.companies
+})
+
 const getNameCompany = (value) => {
   let name = optionsCompanies.value.find((opt) => opt.id === value)?.name
   if (name && name.length > 30) {
     name = truncateString(name, 30)
   }
   return name
+}
+
+const filteredCompanies = ref([...optionsCompanies.value])
+
+const filterCompanies = (val, update) => {
+  if (val === '') {
+    update(() => {
+      filteredCompanies.value = [...optionsCompanies.value]
+    })
+    return
+  }
+
+  update(() => {
+    const needle = val.toLowerCase()
+    filteredCompanies.value = optionsCompanies.value.filter((company) =>
+      company.name.toLowerCase().includes(needle),
+    )
+  })
 }
 
 const getNameDepartment = (value) => {
@@ -902,10 +927,6 @@ const getNameCityHouse = (value) => {
 const truncateString = (str, maxLength = 30) => {
   return str.length > maxLength ? str.substring(0, maxLength) + '...' : str
 }
-
-const optionsCompanies = computed(() => {
-  return commonStore.companies
-})
 
 const optionsDepartments = computed(() => {
   return commonStore.departments
