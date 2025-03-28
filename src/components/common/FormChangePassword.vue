@@ -52,13 +52,11 @@
 <script setup>
 import { reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
 import { showNotifications } from '../../helpers/showNotifications'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
-const $q = useQuasar()
 const router = useRouter()
 
 const props = defineProps({
@@ -120,7 +118,7 @@ const onSubmit = async () => {
     router.push('/')
     window.location.reload()
   }
-  $q.loading.hide()
+  hideLoading()
 }
 
 const onReset = () => {

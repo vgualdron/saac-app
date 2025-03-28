@@ -1,53 +1,26 @@
 <template>
-  <div class="q-pa-none" style="max-width: 800px; margin: auto">
-    <q-card class="my-card" flat>
-      <q-card-section horizontal>
-        <q-img src="~/assets/logo-rectangle.png" width="285" class="q-mx-auto q-my-none" />
-      </q-card-section>
-      <q-separator />
-      <q-card-section horizontal>
-        <q-card-section class="col-12">
-          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+  <q-page class="flex flex-center q-px-sm">
+    <q-banner dense class="bg-primary text-white q-my-sm">
+      <b
+        >Para poder usar todas las funcionalidades de de la app, primero debes completar la
+        información referente a:</b
+      >
+      <br />
+      Información personal, Actividad ecónomica, Descripción de activos, Aportes, Referencias y
+      beneficiarios.
+    </q-banner>
+    <q-card class="q-pa-sm">
+      <q-stepper v-model="step" color="primary" class="q-pa-none" vertical animated>
+        <!-- Paso 1: Información personal -->
+        <q-step :name="1" title="Información personal" icon="looks_one" :done="step > 1">
+          <q-form ref="formStep1" class="q-gutter-none">
             <div class="row text-center">
-              <div class="col-12 q-pl-none text-center">
-                <q-select
-                  use-input
-                  fill-input
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form.company_id"
-                  label="Empresa *"
-                  input-debounce="0"
-                  :options="filteredCompanies"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
-                  @filter="filterCompanies"
-                >
-                  <template v-slot:selected-item="scope">
-                    <span>
-                      {{ getNameCompany(scope.opt) }}
-                    </span>
-                  </template>
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-              </div>
               <div class="col-6 text-center">
                 <q-input
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.first_lastname"
+                  v-model.trim="form1.primer_apellido"
                   label="Primer apellido *"
                   type="text"
                   reactive-rules
@@ -59,7 +32,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.second_lastname"
+                  v-model.trim="form1.segundo_apellido"
                   label="Segundo apellido *"
                   type="text"
                   reactive-rules
@@ -71,7 +44,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.name"
+                  v-model.trim="form1.nombre"
                   label="Nombres *"
                   type="text"
                   reactive-rules
@@ -86,7 +59,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.country"
+                  v-model="form1.nacionalidad"
                   label="Nacionalidad *"
                   input-debounce="0"
                   :options="[
@@ -115,7 +88,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.type_document"
+                  v-model="form1.tipo_documento"
                   label="T. documento *"
                   input-debounce="0"
                   option-value="id"
@@ -161,7 +134,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.document_number"
+                  v-model.trim="form1.cedula"
                   label="Documento *"
                   type="number"
                   reactive-rules
@@ -173,7 +146,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.date_issue"
+                  v-model.trim="form1.fecha_expedicion"
                   label="Fecha Expedición *"
                   type="date"
                   reactive-rules
@@ -188,7 +161,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.department_issue"
+                  v-model="form1.dpto_expedicion"
                   label="Departamento Expedición *"
                   input-debounce="0"
                   :options="optionsDepartments"
@@ -218,7 +191,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.city_issue"
+                  v-model="form1.lugar_expedicion"
                   label="Municipio Expedición *"
                   input-debounce="0"
                   :options="optionsCitiesIssue"
@@ -248,7 +221,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.gender"
+                  v-model="form1.genero"
                   label="Sexo *"
                   input-debounce="0"
                   option-value="id"
@@ -277,7 +250,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.marital_status"
+                  v-model="form1.estado_civil"
                   label="Estado Civil *"
                   input-debounce="0"
                   option-value="id"
@@ -315,7 +288,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.birthdate"
+                  v-model.trim="form1.fecha_nacimiento"
                   label="Fecha nacimiento *"
                   type="date"
                   reactive-rules
@@ -330,7 +303,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.department_id"
+                  v-model="form1.dpto_nacimiento"
                   label="Departamento Nacimiento *"
                   input-debounce="0"
                   :options="optionsDepartments"
@@ -360,7 +333,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.city_id"
+                  v-model="form1.lugar_nacimiento"
                   label="Municipio Nacimiento *"
                   input-debounce="0"
                   :options="optionsCities"
@@ -382,16 +355,67 @@
                   </template>
                 </q-select>
               </div>
+              <div class="col-12 q-pl-none text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model="form1.nombre_representante"
+                  label="Nombre representante"
+                  type="text"
+                  reactive-rules
+                  :rules="[
+                    (val) =>
+                      form1.edad >= 18 ||
+                      (val && val.length > 0) ||
+                      'Obligatorio si la edad es menor de 18 años',
+                  ]"
+                />
+              </div>
+              <div class="col-8 q-pl-none text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model="form1.cedula_representante"
+                  label="Cedula representante"
+                  type="number"
+                  reactive-rules
+                  :rules="[
+                    (val) =>
+                      form1.edad >= 18 ||
+                      (val && val > 0) ||
+                      'Obligatorio si la edad es menor de 18 años',
+                  ]"
+                />
+              </div>
+              <div class="col-4 q-pl-sm text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model="form1.edad_representante"
+                  label="Edad representante"
+                  type="number"
+                  reactive-rules
+                  :rules="[
+                    (val) =>
+                      form1.edad >= 18 ||
+                      (val && val >= 18) ||
+                      'Obligatorio si la edad es menor de 18 años',
+                  ]"
+                />
+              </div>
               <div class="col-6 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.person_charge_adults"
+                  v-model="form1.personas_adultos"
                   label="Adultos a cargo *"
                   type="number"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  :rules="[(val) => val >= 0 || 'Obligatorio']"
                 />
               </div>
               <div class="col-6 q-pl-sm text-center">
@@ -399,11 +423,11 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.person_charge_minors"
+                  v-model="form1.personas_menores"
                   label="Menores a cargo *"
                   type="number"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  :rules="[(val) => val >= 0 || 'Obligatorio']"
                 />
               </div>
               <div class="col-5 q-pl-none text-center">
@@ -414,7 +438,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.type_house"
+                  v-model="form1.tipo_vivienda"
                   label="Tipo vivienda *"
                   input-debounce="0"
                   option-value="id"
@@ -447,7 +471,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.head_of_family"
+                  v-model="form1.cabeza_familia"
                   label="Mujer cabeza de hogar *"
                   input-debounce="0"
                   option-value="id"
@@ -476,7 +500,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.stratum"
+                  v-model="form1.estrato"
                   label="Estrato *"
                   input-debounce="0"
                   :options="[
@@ -525,7 +549,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.department_house"
+                  v-model="form1.dpto"
                   label="Departamento recidencia *"
                   input-debounce="0"
                   :options="optionsDepartments"
@@ -555,7 +579,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.city_house"
+                  v-model="form1.ciudad"
                   label="Municipio de residencia *"
                   input-debounce="0"
                   :options="optionsCitiesHouse"
@@ -582,19 +606,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.district_house"
-                  label="Barrio de residencia *"
-                  type="text"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                />
-              </div>
-              <div class="col-12 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model.trim="form.address_house"
+                  v-model.trim="form1.direccion"
                   label="Dirección de residencia *"
                   type="text"
                   reactive-rules
@@ -606,7 +618,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.phone_house"
+                  v-model.trim="form1.telefono"
                   label="Telefono casa *"
                   type="number"
                   reactive-rules
@@ -618,7 +630,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.phone"
+                  v-model.trim="form1.celular"
                   label="Celular *"
                   type="number"
                   reactive-rules
@@ -630,7 +642,7 @@
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.email"
+                  v-model.trim="form1.email"
                   label="Correo electrónico *"
                   type="email"
                   reactive-rules
@@ -645,7 +657,7 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.academic_level"
+                  v-model="form1.nivel_educativo"
                   label="Nivel academico *"
                   input-debounce="0"
                   option-value="id"
@@ -695,6 +707,42 @@
                 </q-select>
               </div>
               <div class="col-6 q-pl-sm text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model.trim="form1.profesion"
+                  label="Profesión *"
+                  type="text"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                />
+              </div>
+              <div class="col-6 q-pl-none text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model.trim="form1.idiomas"
+                  label="Idiomas *"
+                  type="text"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                />
+              </div>
+              <div class="col-6 q-pl-sm text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model.trim="form1.hobbies"
+                  label="Hobbies *"
+                  type="text"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                />
+              </div>
+              <div class="col-6 q-pl-none text-center">
                 <q-select
                   dense
                   rounded
@@ -702,193 +750,346 @@
                   emit-value
                   transition-show="flip-up"
                   transition-hide="flip-down"
-                  v-model="form.contribution"
-                  label="Valor aporte *"
+                  v-model="form1.autoriza_residencia"
+                  label="Aut residencia *"
                   input-debounce="0"
-                  option-value="id"
-                  option-label="name"
                   :options="[
                     {
-                      id: 60000,
-                      name: '$60.000',
+                      id: 'SI',
+                      name: 'SI',
                     },
                     {
-                      id: 70000,
-                      name: '$70.000',
-                    },
-                    {
-                      id: 80000,
-                      name: '$80.000',
-                    },
-                    {
-                      id: 90000,
-                      name: '$90.000',
-                    },
-                    {
-                      id: 100000,
-                      name: '$100.000',
-                    },
-                    {
-                      id: 120000,
-                      name: '$120.000',
-                    },
-                    {
-                      id: 150000,
-                      name: '$150.000',
-                    },
-                    {
-                      id: 200000,
-                      name: '$200.000',
-                    },
-                    {
-                      id: 300000,
-                      name: '$300.000',
-                    },
-                    {
-                      id: 400000,
-                      name: '$400.000',
-                    },
-                    {
-                      id: 500000,
-                      name: '$500.000',
+                      id: 'NO',
+                      name: 'NO',
                     },
                   ]"
+                  option-value="id"
+                  option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 >
                 </q-select>
               </div>
-              <div class="col-12 q-pl-none text-center">
-                <q-input
+              <div class="col-6 q-pl-sm text-center">
+                <q-select
                   dense
                   rounded
                   outlined
-                  v-model.trim="form.instagram"
-                  label="Cuenta instagram (opcional)"
-                  type="text"
-                />
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.autoriza_trabajo"
+                  label="Aut corresp. trabajo *"
+                  input-debounce="0"
+                  :options="[
+                    {
+                      id: 'SI',
+                      name: 'SI',
+                    },
+                    {
+                      id: 'NO',
+                      name: 'NO',
+                    },
+                  ]"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                >
+                </q-select>
+              </div>
+              <div class="col-6 q-pl-none text-center">
+                <q-select
+                  dense
+                  rounded
+                  outlined
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.autoriza_familiar"
+                  label="Aut corresp. familiar *"
+                  input-debounce="0"
+                  :options="[
+                    {
+                      id: 'SI',
+                      name: 'SI',
+                    },
+                    {
+                      id: 'NO',
+                      name: 'NO',
+                    },
+                  ]"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                >
+                </q-select>
+              </div>
+              <div class="col-6 q-pl-sm text-center">
+                <q-select
+                  dense
+                  rounded
+                  outlined
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.autoriza_email"
+                  label="Aut corresp. email *"
+                  input-debounce="0"
+                  :options="[
+                    {
+                      id: 'SI',
+                      name: 'SI',
+                    },
+                    {
+                      id: 'NO',
+                      name: 'NO',
+                    },
+                  ]"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                >
+                </q-select>
+              </div>
+              <div class="col-6 q-pl-none text-center">
+                <q-select
+                  dense
+                  rounded
+                  outlined
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.autoriza_telefono"
+                  label="Aut corresp. teléfono *"
+                  input-debounce="0"
+                  :options="[
+                    {
+                      id: 'SI',
+                      name: 'SI',
+                    },
+                    {
+                      id: 'NO',
+                      name: 'NO',
+                    },
+                  ]"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                >
+                </q-select>
+              </div>
+              <div class="col-6 q-pl-sm text-center">
+                <q-select
+                  dense
+                  rounded
+                  outlined
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.autoriza_datos"
+                  label="Aut trat. Datos *"
+                  input-debounce="0"
+                  :options="[
+                    {
+                      id: 'SI',
+                      name: 'SI',
+                    },
+                    {
+                      id: 'NO',
+                      name: 'NO',
+                    },
+                  ]"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                >
+                </q-select>
               </div>
             </div>
-
-            <div class="row text-center">
-              <q-btn label="REGISTRARSE" type="submit" color="primary" class="col" rounded />
-            </div>
-            <div class="row text-center">
-              <q-btn
-                label="REGRESAR A INICIAR SESIÓN"
-                color="primary"
-                class="col"
-                @click="login"
-                rounded
-                outline
-              />
-            </div>
           </q-form>
-        </q-card-section>
-      </q-card-section>
+          <q-stepper-navigation class="q-pa-sm text-right">
+            <q-btn @click="validateStep(1)" label="Siguiente" color="primary" rounded />
+          </q-stepper-navigation>
+        </q-step>
+
+        <!-- Paso 2: Actividad económica -->
+        <q-step :name="2" title="Actividad económica" icon="looks_two" :done="step > 2">
+          <q-form ref="formStep2" class="q-gutter-md">
+            <q-input
+              v-model="form2.occupation"
+              label="Ocupación"
+              outlined
+              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+            />
+            <q-input
+              v-model="form2.salary"
+              label="Salario Mensual"
+              type="number"
+              outlined
+              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+            />
+          </q-form>
+          <q-stepper-navigation>
+            <q-btn @click="step--" label="Atrás" color="grey" rounded class="q-mr-sm" />
+            <q-btn @click="validateStep(2)" label="Siguiente" color="primary" />
+          </q-stepper-navigation>
+        </q-step>
+
+        <!-- Paso 3: Descripción de activos -->
+        <q-step :name="3" title="Descripción de activos" icon="looks_3" :done="step > 3">
+          <q-form ref="formStep3" class="q-gutter-md">
+            <q-input
+              v-model="form3.property"
+              label="Propiedad (Casa, Carro, etc.)"
+              outlined
+              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+            />
+          </q-form>
+          <q-stepper-navigation>
+            <q-btn @click="step--" label="Atrás" color="grey" flat class="q-mr-sm" />
+            <q-btn @click="validateStep(3)" label="Siguiente" color="primary" />
+          </q-stepper-navigation>
+        </q-step>
+
+        <!-- Paso 4: Referencias -->
+        <q-step :name="4" title="Referencias y beneficiarios" icon="looks_4" :done="step > 4">
+          <q-form ref="formStep4" class="q-gutter-md">
+            <q-input
+              v-model="form4.reference"
+              label="Nombre de Referencia"
+              outlined
+              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+            />
+          </q-form>
+          <q-stepper-navigation>
+            <q-btn @click="step--" label="Atrás" color="grey" flat class="q-mr-sm" />
+            <q-btn @click="validateStep(4)" label="Siguiente" color="primary" />
+          </q-stepper-navigation>
+        </q-step>
+
+        <!-- Paso 5: Aportes -->
+        <q-step :name="5" title="Aportes" icon="looks_5" :done="step > 5">
+          <q-form ref="formStep5" class="q-gutter-md">
+            <q-input
+              v-model="form5.contribution"
+              label="Monto de Aporte"
+              type="number"
+              outlined
+              :rules="[(val) => (val && val > 0) || 'Obligatorio']"
+            />
+          </q-form>
+          <q-stepper-navigation>
+            <q-btn @click="step--" label="Atrás" color="grey" flat class="q-mr-sm" />
+            <q-btn @click="finishStepper" label="Finalizar" color="green" />
+          </q-stepper-navigation>
+        </q-step>
+      </q-stepper>
     </q-card>
-  </div>
+  </q-page>
 </template>
+
 <script setup>
-import { reactive, onMounted, computed, watch, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useCommonStore } from '../../stores/common'
+import { reactive, ref, onMounted, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { showNotifications } from '../../helpers/showNotifications'
 import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
 const router = useRouter()
 
-const initialFormState = {
-  company_id: '',
-  country: '',
-  first_lastname: '',
-  second_lastname: '',
-  name: '',
-  type_document: '',
-  document_number: '',
-  date_issue: '',
-  department_issue: '',
-  city_issue: '',
-  gender: '',
-  marital_status: '',
-  birthdate: '',
-  department_id: '',
-  city_id: '',
-  type_house: '',
-  person_charge_adults: '',
-  person_charge_minors: '',
-  head_of_family: '',
-  stratum: '',
-  department_house: '',
-  city_house: '',
-  district_house: '',
-  address_house: '',
-  phone_house: '',
-  phone: '',
-  email: '',
-  academic_level: '',
-  contribution: '',
-  instagram: '',
-  active: 1,
-}
+const step = ref(1) // Paso inicial
 
-const form = reactive({ ...initialFormState })
-
-const onSubmit = async () => {
-  showLoading('Creando cuenta ...', 'Por favor, espere', true)
-  const data = { ...form }
-  await commonStore.signUp(data)
-
-  if (commonStore.status) {
-    router.push('/')
+const user = computed(() => {
+  let u = {}
+  if (commonStore.user && commonStore.user.data && commonStore.user.data.user) {
+    u = commonStore.user.data.user
   }
-  showNotification(commonStore.responseMessages, commonStore.status, 'bottom-right', 5000)
-  hideLoading()
-}
-
-const showNotification = (messages, status, align, timeout) => {
-  showNotifications(messages, status, align, timeout)
-}
-
-const login = () => {
-  router.push('/')
-}
-
-const onReset = () => {
-  Object.assign(form, initialFormState)
-}
-
-const optionsCompanies = computed(() => {
-  return commonStore.companies
+  return u
 })
 
-const getNameCompany = (value) => {
-  let name = optionsCompanies.value.find((opt) => opt.id === value)?.name
-  if (name && name.length > 30) {
-    name = truncateString(name, 30)
+const novel = computed(() => {
+  let n = {}
+  if (user.value && user.value.new) {
+    n = user.value.new
   }
-  return name
-}
+  return n
+})
 
-const filteredCompanies = ref([...optionsCompanies.value])
+const edad = computed(() => {
+  if (!form1.fecha_nacimiento) return ''
+  const nacimiento = new Date(form1.fecha_nacimiento)
+  const hoy = new Date()
+  let edadCalculada = hoy.getFullYear() - nacimiento.getFullYear()
 
-const filterCompanies = (val, update) => {
-  if (val === '') {
-    update(() => {
-      filteredCompanies.value = [...optionsCompanies.value]
-    })
-    return
+  // Ajustar si aún no ha cumplido años este año
+  const mesActual = hoy.getMonth()
+  const diaActual = hoy.getDate()
+  if (
+    mesActual < nacimiento.getMonth() ||
+    (mesActual === nacimiento.getMonth() && diaActual < nacimiento.getDate())
+  ) {
+    edadCalculada--
   }
 
-  update(() => {
-    const needle = val.toLowerCase()
-    filteredCompanies.value = optionsCompanies.value.filter((company) =>
-      company.name.toLowerCase().includes(needle),
-    )
-  })
-}
+  return edadCalculada
+})
+
+// Datos de cada paso
+const form1 = reactive({
+  fecha_afiliacion: user.value.payment_date,
+  nombre: novel.value.name,
+  primer_apellido: novel.value.first_lastname,
+  segundo_apellido: novel.value.second_lastname,
+  tipo_documento: novel.value.type_document,
+  cedula: novel.value.document_number,
+  fecha_expedicion: novel?.value?.date_issue?.substring(0, 10),
+  dpto_expedicion: novel.value.dpto_exp,
+  lugar_expedicion: novel.value.city_issue,
+  fecha_nacimiento: novel?.value?.birthdate?.substring(0, 10),
+  edad,
+  dpto_nacimiento: novel.value.dpto_birth,
+  lugar_nacimiento: novel.value.city_id,
+  nacionalidad: novel.value.country,
+  cedula_representante: '',
+  nombre_representante: '',
+  edad_representante: '',
+  genero: novel.value.gender,
+  estado_civil: novel.value.marital_status,
+  personas_adultos: novel.value.person_charge_adults,
+  personas_menores: novel.value.person_charge_minors,
+  cabeza_familia: novel.value.head_of_family,
+  tipo_vivienda: novel.value.type_house,
+  estrato: novel.value.stratum,
+  dpto: novel.value.dpto_house,
+  ciudad: novel.value.city_house,
+  direccion: novel.value.address_house,
+  telefono: novel.value.phone_house,
+  celular: novel.value.phone,
+  email: novel.value.email,
+  nivel_educativo: novel.value.academic_level,
+  profesion: '',
+  idiomas: '',
+  hobbies: '',
+  autoriza_residencia: 'NO',
+  autoriza_trabajo: 'NO',
+  autoriza_familiar: 'NO',
+  autoriza_email: 'NO',
+  autoriza_telefono: 'NO',
+  autoriza_datos: 'NO',
+  estado: 'Activo',
+})
 
 const getNameDepartment = (value) => {
   let name = optionsDepartments.value.find((opt) => opt.id === value)?.name
@@ -931,37 +1132,66 @@ const optionsDepartments = computed(() => {
 })
 
 const optionsCitiesIssue = computed(() => {
-  return commonStore.cities.filter((c) => c.department_id === form.department_issue)
+  return commonStore.cities.filter((c) => c.department_id === form1.dpto_expedicion)
 })
 
 const optionsCities = computed(() => {
-  return commonStore.cities.filter((c) => c.department_id === form.department_id)
+  return commonStore.cities.filter((c) => c.department_id === form1.dpto_nacimiento)
 })
 
 const optionsCitiesHouse = computed(() => {
-  return commonStore.cities.filter((c) => c.department_id === form.department_house)
+  return commonStore.cities.filter((c) => c.department_id === form1.dpto)
 })
 
 watch(
-  () => form.department_issue,
+  () => form1.dpto_expedicion,
   () => {
-    form.city_issue = ''
+    form1.lugar_expedicion = ''
   },
 )
 
 watch(
-  () => form.department_id,
+  () => form1.department_id,
   () => {
-    form.city_id = ''
+    form1.city_id = ''
   },
 )
 
 watch(
-  () => form.department_house,
+  () => form1.department_house,
   () => {
-    form.city_house = ''
+    form1.city_house = ''
   },
 )
+
+const form2 = reactive({ occupation: '', salary: '' })
+const form3 = reactive({ property: '' })
+const form4 = reactive({ reference: '' })
+const form5 = reactive({ contribution: '' })
+
+// Referencias a los formularios
+const formStep1 = ref(null)
+const formStep2 = ref(null)
+const formStep3 = ref(null)
+const formStep4 = ref(null)
+const formStep5 = ref(null)
+
+// Función para validar el formulario antes de avanzar
+const validateStep = async (currentStep) => {
+  const formRef = eval(`formStep${currentStep}`)
+  if (formRef.value) {
+    const valid = await formRef.value.validate()
+    if (valid) step.value++
+  }
+}
+
+// Función para finalizar el proceso
+const finishStepper = async () => {
+  const allValid = await Promise.all([formStep5.value.validate()])
+  if (allValid.every((valid) => valid)) {
+    onSubmit()
+  }
+}
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
@@ -970,10 +1200,26 @@ onMounted(async () => {
   await commonStore.getCompanies()
   hideLoading()
 })
+
+const onSubmit = async () => {
+  showLoading('Creando cuenta ...', 'Por favor, espere', true)
+  const data = {}
+  data.asociado = { ...form1 }
+  await commonStore.completeDataSaac(data)
+
+  if (commonStore.status) {
+    commonStore.setCompleteData(commonStore.status)
+    router.push('/')
+  }
+  showNotifications(commonStore.responseMessages, commonStore.status, 'bottom-right', 5000)
+  hideLoading()
+}
 </script>
 <style scoped>
-.my-card {
-  width: 100%;
-  max-width: 800px;
+:deep(.q-stepper--vertical .q-stepper__step-inner) {
+  padding: 0px 0px 0px 20px;
+}
+:deep(.q-stepper--vertical .q-stepper__tab) {
+  padding: 12px 0px;
 }
 </style>

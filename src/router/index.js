@@ -41,12 +41,18 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       // Redirige a la página de inicio de sesión si no está autenticado
       next('/')
     } else {
-      /* if (to.path === '/' && commonStore.isLoggedIn) {
-        next('/home')
+      if (
+        commonStore.user &&
+        commonStore.user.data &&
+        commonStore.user.data.user &&
+        !commonStore.user.data.user.completed_fields &&
+        to.fullPath !== '/complete' &&
+        to.fullPath !== '/logout'
+      ) {
+        next('/complete')
       } else {
-        next() // Permite el acceso a la ruta
-      } */
-      next()
+        next()
+      }
     }
   })
 

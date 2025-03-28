@@ -115,16 +115,14 @@
 </template>
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { useQuasar } from 'quasar'
 import UploadInvoice from 'components/points/UploadInvoice.vue'
 import { useCommonStore } from '../../stores/common'
 import { usePointStore } from '../../stores/point'
 import { showNotifications } from '../../helpers/showNotifications'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
 const pointStore = usePointStore()
-const $q = useQuasar()
 const emit = defineEmits(['update:value'])
 
 const props = defineProps({
@@ -133,14 +131,14 @@ const props = defineProps({
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
-  $q.loading.hide()
+  hideLoading()
 })
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await commonStore.getCategories()
   await commonStore.getShops()
-  $q.loading.hide()
+  hideLoading()
 })
 
 const showModal = computed({
@@ -240,7 +238,7 @@ const onSubmit = async () => {
     showModal.value = false
     await pointStore.listByUserSession('pendiente,aprobado,rechazado,creado')
   }
-  $q.loading.hide()
+  hideLoading()
 }
 
 const onReset = () => {

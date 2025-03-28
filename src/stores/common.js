@@ -36,6 +36,9 @@ export const useCommonStore = defineStore('common', {
     setUserUpdatePassword(value) {
       this.user.data.user.update_password = value
     },
+    setCompleteData(value) {
+      this.user.data.user.completed_fields = value
+    },
     setUserUpdatePhoto(value) {
       this.user.data.user.update_photo = value
     },
@@ -72,6 +75,25 @@ export const useCommonStore = defineStore('common', {
         this.status = true
         this.user = await commonApi.signUp(payload)
         this.responseMessages = this.user.data.message
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
+    async completeDataSaac(payload) {
+      try {
+        this.status = true
+        const response = await commonApi.completeDataSaac(payload)
+        this.responseMessages = response.data.message
       } catch (error) {
         this.status = false
         if (error.message !== 'Network Error') {

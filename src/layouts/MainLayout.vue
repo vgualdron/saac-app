@@ -149,11 +149,9 @@ import EssentialLink from 'src/components/common/EssentialLink.vue'
 import UploadImageProfile from 'components/common/UploadImageProfile.vue'
 import FormChangePassword from 'components/common/FormChangePassword.vue'
 import ModalPaid from 'components/common/ModalPaid.vue'
-import { showLoading } from '../helpers/showLoading'
-import { useQuasar } from 'quasar'
+import { showLoading, hideLoading } from '../helpers/showLoading'
 
 const commonStore = useCommonStore()
-const $q = useQuasar()
 
 const linksL = [
   {
@@ -211,7 +209,6 @@ const linksList = ref(linksL)
 const leftDrawerOpen = ref(false)
 const showModalPassword = ref(false)
 const showModalPaid = ref(false)
-const showModalCompleteData = ref(false)
 const refDropdown = ref(null)
 const refUploadImageProfile = ref(null)
 
@@ -225,10 +222,8 @@ onMounted(async () => {
     showModalPassword.value = true
   } else if (!user.value.update_photo) {
     openDropdownAndInitCamera()
-  } else if (!user.value.completed_fields) {
-    showModalCompleteData.value = true
   }
-  $q.loading.hide()
+  hideLoading()
 })
 
 const versionApp = computed(() => `Version ${process.env.LATEST_VERSION_APP}`)

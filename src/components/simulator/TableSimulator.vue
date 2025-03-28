@@ -171,13 +171,11 @@
 <script setup>
 import moment from 'moment'
 import { computed, onMounted, ref, reactive, watch } from 'vue'
-import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
 // import { showNotifications } from '../../helpers/showNotifications'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
-const $q = useQuasar()
 
 const loading = ref(false)
 const generate = ref(false)
@@ -314,7 +312,7 @@ const generateTable = async () => {
   if (commonStore.status) {
     generate.value = true
   }
-  $q.loading.hide()
+  hideLoading()
 }
 
 const updateAmount = (value) => {
@@ -349,7 +347,7 @@ onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await commonStore.getCreditLines()
   form.creditLine = optionsCreditLines.value[0]
-  $q.loading.hide()
+  hideLoading()
   loading.value = false
 })
 

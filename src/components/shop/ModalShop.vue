@@ -76,10 +76,7 @@
 </template>
 <script setup>
 import { onMounted, computed } from 'vue'
-import { useQuasar } from 'quasar'
-import { showLoading } from '../../helpers/showLoading'
-
-const $q = useQuasar()
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const props = defineProps({
   shop: Object,
@@ -88,7 +85,7 @@ const props = defineProps({
 
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
-  $q.loading.hide()
+  hideLoading()
 })
 
 const showModal = computed({

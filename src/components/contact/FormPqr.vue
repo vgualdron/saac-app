@@ -41,13 +41,11 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
 import { showNotifications } from '../../helpers/showNotifications'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
-const $q = useQuasar()
 const router = useRouter()
 
 const initialFormState = {
@@ -79,7 +77,7 @@ const onSubmit = async () => {
   } else {
     showNotification(commonStore.responseMessages, false, 'bottom-right', 5000)
   }
-  $q.loading.hide()
+  hideLoading()
 }
 
 const onReset = () => {

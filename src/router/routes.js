@@ -14,6 +14,17 @@ const routes = [
     ],
   },
   {
+    path: '/complete',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/CompletePage.vue'),
+        meta: { requiresAuth: true },
+      },
+    ],
+  },
+  {
     path: '/logout',
     component: () => import('layouts/MainLayout.vue'),
     children: [

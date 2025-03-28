@@ -78,13 +78,11 @@
 </template>
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { useQuasar } from 'quasar'
 import ModalShop from 'components/shop/ModalShop.vue'
 import { useCommonStore } from '../../stores/common'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const commonStore = useCommonStore()
-const $q = useQuasar()
 
 const form = reactive({
   category: null,
@@ -97,7 +95,7 @@ onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await commonStore.getCategories()
   await commonStore.getShops()
-  $q.loading.hide()
+  hideLoading()
 })
 
 const optionsShops = computed(() => {

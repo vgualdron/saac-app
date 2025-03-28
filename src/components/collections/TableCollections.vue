@@ -129,15 +129,13 @@
 </template>
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { useQuasar } from 'quasar'
 import { useCollectionStore } from '../../stores/collection'
 import { useCommonStore } from '../../stores/common'
 // import { showNotifications } from '../../helpers/showNotifications'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const collectionStore = useCollectionStore()
 const commonStore = useCommonStore()
-const $q = useQuasar()
 
 const loading = ref(false)
 const pagination = ref({
@@ -153,7 +151,7 @@ onMounted(async () => {
   }
   await collectionStore.getCollections(document)
   await commonStore.getStatement(document)
-  $q.loading.hide()
+  hideLoading()
   loading.value = false
 })
 

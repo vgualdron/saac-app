@@ -63,12 +63,10 @@
 
 <script setup>
 import { ref, onMounted, watch, nextTick, computed } from 'vue'
-import { useQuasar } from 'quasar'
 import { useFileStore } from '../../stores/file'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const fileStore = useFileStore()
-const $q = useQuasar()
 const isLoaded = ref(false)
 const video = ref(null)
 const currentStatus = ref(0)
@@ -164,7 +162,7 @@ const downloadFile = async () => {
 onMounted(async () => {
   showLoading('Cargando ...', 'Por favor, espere', true)
   await fileStore.listStatusesToday()
-  $q.loading.hide()
+  hideLoading()
   isLoaded.value = true
   playFile()
 })

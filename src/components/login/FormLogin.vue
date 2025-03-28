@@ -56,16 +56,14 @@
 <script setup>
 import { computed, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
 import { useCommonStore } from '../../stores/common'
 import { showNotifications } from '../../helpers/showNotifications'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 // Importar la imagen de fondo
 import backgroundImage from '../../assets/back.jpeg'
 
 const commonStore = useCommonStore()
-const $q = useQuasar()
 const router = useRouter()
 
 const versionApp = computed(() => `Versión ${process.env.LATEST_VERSION_APP}`)
@@ -78,14 +76,14 @@ const initialFormState = {
 const form = reactive({ ...initialFormState })
 
 const backgroundStyle = computed(() => ({
-  backgroundImage: `url(${backgroundImage})`,
+  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${backgroundImage})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   height: '100vh',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  opacity: 0.8,
+  opacity: 1,
 }))
 
 const onSubmit = async () => {
@@ -99,7 +97,7 @@ const onSubmit = async () => {
   } else {
     showNotifications(commonStore.responseMessages, false, 'bottom-right', 5000)
   }
-  $q.loading.hide()
+  hideLoading()
 }
 
 const register = () => {

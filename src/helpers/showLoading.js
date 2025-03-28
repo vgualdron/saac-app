@@ -1,4 +1,4 @@
-import { Loading } from 'quasar';
+import { Loading } from 'quasar'
 
 const showLoading = (message, detail, html) => {
   Loading.show({
@@ -14,7 +14,11 @@ const showLoading = (message, detail, html) => {
                 ${detail}
               </span>`,
     html,
-  });
-};
+  })
+}
 
-export { showLoading };
+const hideLoading = () => {
+  Loading.hide()
+}
+
+export { showLoading, hideLoading }

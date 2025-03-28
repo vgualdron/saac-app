@@ -7,6 +7,8 @@ export default {
 
   signUp: (data) => api.post('/auth/create', data),
 
+  completeDataSaac: (data) => api.post('/new/complete-data-saac', data),
+
   signOut: (data) => api.post('/auth/logout', data),
 
   getCompanies: () => api.get('/company'),

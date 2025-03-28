@@ -62,12 +62,10 @@
 <script setup>
 import ModalFormPoint from 'components/points/ModalFormPoint.vue'
 import { computed, onMounted, ref } from 'vue'
-import { useQuasar } from 'quasar'
 import { usePointStore } from '../../stores/point'
-import { showLoading } from '../../helpers/showLoading'
+import { showLoading, hideLoading } from '../../helpers/showLoading'
 
 const pointStore = usePointStore()
-const $q = useQuasar()
 
 const showModalPoint = ref(false)
 
@@ -80,7 +78,7 @@ onMounted(async () => {
   loading.value = true
   showLoading('Cargando ...', 'Por favor, espere', true)
   await pointStore.listByUserSession('pendiente,aprobado,rechazado,creado')
-  $q.loading.hide()
+  hideLoading()
   loading.value = false
 })
 
