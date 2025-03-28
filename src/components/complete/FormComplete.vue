@@ -927,15 +927,8 @@
         <q-step :name="2" title="Actividad económica" icon="looks_two" :done="step > 2">
           <q-form ref="formStep2" class="q-gutter-md">
             <q-input
-              v-model="form2.occupation"
+              v-model="form2.item"
               label="Ocupación"
-              outlined
-              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-            />
-            <q-input
-              v-model="form2.salary"
-              label="Salario Mensual"
-              type="number"
               outlined
               :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
             />
@@ -950,7 +943,7 @@
         <q-step :name="3" title="Descripción de activos" icon="looks_3" :done="step > 3">
           <q-form ref="formStep3" class="q-gutter-md">
             <q-input
-              v-model="form3.property"
+              v-model="form3.item"
               label="Propiedad (Casa, Carro, etc.)"
               outlined
               :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
@@ -962,12 +955,12 @@
           </q-stepper-navigation>
         </q-step>
 
-        <!-- Paso 4: Referencias -->
-        <q-step :name="4" title="Referencias y beneficiarios" icon="looks_4" :done="step > 4">
+        <!-- Paso 4: conocimiento mejorado de personas -->
+        <q-step :name="4" title="Conocimiento mejorado de personas" icon="looks_4" :done="step > 4">
           <q-form ref="formStep4" class="q-gutter-md">
             <q-input
-              v-model="form4.reference"
-              label="Nombre de Referencia"
+              v-model="form4.item"
+              label="Propiedad (Casa, Carro, etc.)"
               outlined
               :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
             />
@@ -978,11 +971,27 @@
           </q-stepper-navigation>
         </q-step>
 
-        <!-- Paso 5: Aportes -->
-        <q-step :name="5" title="Aportes" icon="looks_5" :done="step > 5">
+        <!-- Paso 5: Referencias -->
+        <q-step :name="5" title="Referencias y beneficiarios" icon="looks_5" :done="step > 5">
           <q-form ref="formStep5" class="q-gutter-md">
             <q-input
-              v-model="form5.contribution"
+              v-model="form5.item"
+              label="Nombre de Referencia"
+              outlined
+              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+            />
+          </q-form>
+          <q-stepper-navigation>
+            <q-btn @click="step--" label="Atrás" color="grey" flat class="q-mr-sm" />
+            <q-btn @click="validateStep(5)" label="Siguiente" color="primary" />
+          </q-stepper-navigation>
+        </q-step>
+
+        <!-- Paso 6: Aportes -->
+        <q-step :name="6" title="Aportes" icon="looks_6" :done="step > 6">
+          <q-form ref="formStep6" class="q-gutter-md">
+            <q-input
+              v-model="form6.item"
               label="Monto de Aporte"
               type="number"
               outlined
@@ -1164,10 +1173,51 @@ watch(
   },
 )
 
-const form2 = reactive({ occupation: '', salary: '' })
-const form3 = reactive({ property: '' })
-const form4 = reactive({ reference: '' })
-const form5 = reactive({ contribution: '' })
+const form2 = reactive({
+  actividad_economica: 'Asalariado',
+  declara_renta: 'No',
+  codigo_ciiu: '',
+  descripcion_ciiu: '',
+  ocupacion: '',
+  cargo: '',
+  empresa: '',
+  empresa_id: '',
+  tipo_empresa: 'Privada',
+  descuento: 'Nomina',
+  tipo_contrato: 'Indefinido',
+  tiempo_actividad: 'COMPLETO',
+  jornada: 'DIURNA',
+  direccion_empresa: '',
+  ciudad_empresa: '',
+  dpto_empresa: '',
+  telefono_empresa: '',
+  extension: '',
+  actividad_secundaria: '',
+  direccion_secundaria: '',
+  ciudad_secundaria: '',
+  dpto_secundaria: '',
+  telefono_secundaria: '',
+  descripcion_secundaria: '',
+  pensionado: 'No',
+  entidad_pension: '',
+  valor_pension: '',
+  fecha_pension: '',
+  resolucion_pension: '',
+  fecha_corte: '',
+  ingresos_anuales: '',
+  ingresos_mensuales: '',
+  egresos_anuales: '',
+  egresos_mensuales: '',
+  total_activos: '',
+  total_pasivos: '',
+  otros_ingresos: '',
+  descripcion_ingresos: '',
+})
+
+const form3 = reactive({ item: '' })
+const form4 = reactive({ item: '' })
+const form5 = reactive({ item: '' })
+const form6 = reactive({ item: '' })
 
 // Referencias a los formularios
 const formStep1 = ref(null)
@@ -1175,6 +1225,7 @@ const formStep2 = ref(null)
 const formStep3 = ref(null)
 const formStep4 = ref(null)
 const formStep5 = ref(null)
+const formStep6 = ref(null)
 
 // Función para validar el formulario antes de avanzar
 const validateStep = async (currentStep) => {
@@ -1187,7 +1238,7 @@ const validateStep = async (currentStep) => {
 
 // Función para finalizar el proceso
 const finishStepper = async () => {
-  const allValid = await Promise.all([formStep5.value.validate()])
+  const allValid = await Promise.all([formStep6.value.validate()])
   if (allValid.every((valid) => valid)) {
     onSubmit()
   }
@@ -1205,10 +1256,12 @@ const onSubmit = async () => {
   showLoading('Creando cuenta ...', 'Por favor, espere', true)
   const data = {}
   data.asociado = { ...form1 }
+  data.economicas = { ...form2 }
   await commonStore.completeDataSaac(data)
 
   if (commonStore.status) {
     commonStore.setCompleteData(commonStore.status)
+    // PONER QUE SE CAMBIE EL VALOR DEL CAMPO. USERS.COMPLETED_FIELDS
     router.push('/')
   }
   showNotifications(commonStore.responseMessages, commonStore.status, 'bottom-right', 5000)
