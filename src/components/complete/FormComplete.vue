@@ -2896,7 +2896,7 @@ import { showLoading, hideLoading } from '../../helpers/showLoading'
 const commonStore = useCommonStore()
 const router = useRouter()
 
-const step = ref(4) // Paso inicial
+const step = ref(1) // Paso inicial
 
 const user = computed(() => {
   let u = {}
