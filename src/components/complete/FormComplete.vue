@@ -3285,6 +3285,7 @@ const onSubmit = async () => {
   data.asociado = { ...form1 }
   data.economicas = { ...form2 }
   data.activos = { ...form3 }
+  data.conocimientos = { ...form4 }
   data.aportes = [
     {
       linea_aporte_id: 1,
