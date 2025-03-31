@@ -1023,10 +1023,9 @@
                   rounded
                   outlined
                   v-model.trim="form2.codigo_ciiu"
-                  label="Código CIIU *"
+                  label="Código CIIU"
                   type="number"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
               <div class="col-6 text-center q-pl-sm">
@@ -1035,10 +1034,9 @@
                   rounded
                   outlined
                   v-model.trim="form2.descripcion_ciiu"
-                  label="Descripción CIIU *"
+                  label="Descripción CIIU"
                   type="text"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
               <div class="col-12 q-pl-none text-center">
@@ -1627,7 +1625,7 @@
                   rounded
                   outlined
                   v-model="form2.total_activos"
-                  label="Total activos *"
+                  label="Total activos (Patrimonio)*"
                   type="number"
                   reactive-rules
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
@@ -1639,7 +1637,7 @@
                   rounded
                   outlined
                   v-model="form2.total_pasivos"
-                  label="Total pasivos *"
+                  label="Total pasivos (Deudas)*"
                   type="number"
                   reactive-rules
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
