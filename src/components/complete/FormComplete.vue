@@ -14,6 +14,13 @@
         <!-- Paso 1: Información personal -->
         <q-step :name="1" title="Información personal" icon="looks_one" :done="step > 1">
           <q-form ref="formStep1" class="q-gutter-none">
+            <div
+              v-if="edad < 18"
+              class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm"
+            >
+              Según la fecha de nacimiento estás completando información de un progresandito de
+              {{ edad }} años.
+            </div>
             <div class="row text-center">
               <div class="col-6 text-center">
                 <q-input
@@ -243,6 +250,78 @@
                 </q-select>
               </div>
               <div class="col-6 q-pl-none text-center">
+                <q-input
+                  dense
+                  rounded
+                  outlined
+                  v-model.trim="form1.fecha_nacimiento"
+                  label="Fecha nacimiento *"
+                  type="date"
+                  reactive-rules
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                />
+              </div>
+              <div class="col-6 q-pl-sm text-center">
+                <q-select
+                  dense
+                  rounded
+                  outlined
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.dpto_nacimiento"
+                  label="Departamento Nacimiento *"
+                  input-debounce="0"
+                  :options="optionsDepartments"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => val || 'Obligatorio']"
+                >
+                  <template v-slot:selected-item="scope">
+                    <span>
+                      {{ getNameDepartment(scope.opt) }}
+                    </span>
+                  </template>
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+              <div class="col-6 q-pl-none text-center">
+                <q-select
+                  dense
+                  rounded
+                  outlined
+                  emit-value
+                  transition-show="flip-up"
+                  transition-hide="flip-down"
+                  v-model="form1.lugar_nacimiento"
+                  label="Municipio Nacimiento *"
+                  input-debounce="0"
+                  :options="optionsCities"
+                  option-value="id"
+                  option-label="name"
+                  behavior="menu"
+                  reactive-rules
+                  :rules="[(val) => val || 'Obligatorio']"
+                >
+                  <template v-slot:selected-item="scope">
+                    <span>
+                      {{ getNameCity(scope.opt) }}
+                    </span>
+                  </template>
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-select
                   dense
                   rounded
@@ -283,79 +362,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model.trim="form1.fecha_nacimiento"
-                  label="Fecha nacimiento *"
-                  type="date"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form1.dpto_nacimiento"
-                  label="Departamento Nacimiento *"
-                  input-debounce="0"
-                  :options="optionsDepartments"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
-                >
-                  <template v-slot:selected-item="scope">
-                    <span>
-                      {{ getNameDepartment(scope.opt) }}
-                    </span>
-                  </template>
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form1.lugar_nacimiento"
-                  label="Municipio Nacimiento *"
-                  input-debounce="0"
-                  :options="optionsCities"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
-                >
-                  <template v-slot:selected-item="scope">
-                    <span>
-                      {{ getNameCity(scope.opt) }}
-                    </span>
-                  </template>
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey"> No hay coincidencias </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-              </div>
-              <div class="col-12 q-pl-none text-center">
+              <div v-if="edad < 18" class="col-12 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
@@ -372,7 +379,7 @@
                   ]"
                 />
               </div>
-              <div class="col-8 q-pl-none text-center">
+              <div v-if="edad < 18" class="col-8 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
@@ -389,7 +396,7 @@
                   ]"
                 />
               </div>
-              <div class="col-4 q-pl-sm text-center">
+              <div v-if="edad < 18" class="col-4 q-pl-sm text-center">
                 <q-input
                   dense
                   rounded
@@ -406,7 +413,7 @@
                   ]"
                 />
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
@@ -418,7 +425,7 @@
                   :rules="[(val) => val >= 0 || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-input
                   dense
                   rounded
@@ -430,7 +437,7 @@
                   :rules="[(val) => val >= 0 || 'Obligatorio']"
                 />
               </div>
-              <div class="col-5 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-5 q-pl-none text-center">
                 <q-select
                   dense
                   rounded
@@ -463,7 +470,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-7 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-7 q-pl-sm text-center">
                 <q-select
                   dense
                   rounded
@@ -637,7 +644,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-12 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-12 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
@@ -649,7 +656,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-select
                   dense
                   rounded
@@ -706,7 +713,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-input
                   dense
                   rounded
@@ -718,7 +725,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
@@ -730,7 +737,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-input
                   dense
                   rounded
@@ -926,7 +933,7 @@
         <!-- Paso 2: Actividad económica -->
         <q-step :name="2" title="Actividad económica" icon="looks_two" :done="step > 2">
           <q-form ref="formStep2" class="q-gutter-none">
-            <div class="row text-center">
+            <div v-if="edad >= 18" class="row text-center">
               <div class="col-6 q-pl-none text-center">
                 <q-select
                   dense
@@ -1039,7 +1046,7 @@
                   reactive-rules
                 />
               </div>
-              <div class="col-12 q-pl-none text-center">
+              <div class="col-12 q-pl-none text-center q-mt-md">
                 <q-select
                   use-input
                   fill-input
@@ -1668,6 +1675,10 @@
                 />
               </div>
             </div>
+            <div else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
+              Según la fecha de nacimiento estás completando información de un progresandito de
+              {{ edad }} años. Esta sección no es obligatoria, continua con la sigueinte sección.
+            </div>
           </q-form>
           <q-stepper-navigation class="q-pa-sm text-right">
             <q-btn @click="step--" label="Atrás" color="grey" rounded class="q-mr-sm" />
@@ -1677,343 +1688,352 @@
 
         <!-- Paso 3: Descripción de activos -->
         <q-step :name="3" title="Descripción de activos" icon="looks_3" :done="step > 3">
-          <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+          <div
+            v-if="edad >= 18"
+            class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm"
+          >
             Bien inmueble 1 (Casas, Apartamentos, Lotes, Fincas)
           </div>
           <q-form ref="formStep3" class="q-gutter-md">
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.tipo_primer_bien"
-                  label="Tipo"
-                  type="text"
-                />
+            <template v-if="edad >= 18">
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.tipo_primer_bien"
+                    label="Tipo"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.valor_primer_bien"
+                    label="Valor comercial"
+                    type="number"
+                  />
+                </div>
+                <div class="col-12 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.direccion_primer_bien"
+                    label="Dirección"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.hipoteca_primer_bien"
+                    label="Hipotecado a"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.saldo_primer_bien"
+                    label="Saldo del crédito"
+                    type="number"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.valor_primer_bien"
-                  label="Valor comercial"
-                  type="number"
-                />
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                Bien inmueble 2 (Casas, Apartamentos, Lotes, Fincas)
               </div>
-              <div class="col-12 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.direccion_primer_bien"
-                  label="Dirección"
-                  type="text"
-                />
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.tipo_segundo_bien"
+                    label="Tipo"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.valor_segundo_bien"
+                    label="Valor comercial"
+                    type="number"
+                  />
+                </div>
+                <div class="col-12 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.direccion_segundo_bien"
+                    label="Dirección"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.hipoteca_segundo_bien"
+                    label="Hipotecado a"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.saldo_segundo_bien"
+                    label="Saldo del crédito"
+                    type="number"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.hipoteca_primer_bien"
-                  label="Hipotecado a"
-                  type="text"
-                />
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                Vehiculo 1 (Moto, Auto, Campero, Camioneta)
               </div>
-              <div class="col-6 q-pl-sm q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.saldo_primer_bien"
-                  label="Saldo del crédito"
-                  type="number"
-                />
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.tipo_primer_vehiculo"
+                    label="Tipo"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.valor_primer_vehiculo"
+                    label="Valor comercial"
+                    type="number"
+                  />
+                </div>
+                <div class="col-12 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.marca_primer_vehiculo"
+                    label="Marca / modelo"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.placa_primer_vehiculo"
+                    label="Placa"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.saldo_primer_vehiculo"
+                    label="Saldo del crédito"
+                    type="number"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.prenda_primer_vehiculo"
+                    label="Prenda a favor"
+                    type="text"
+                  />
+                </div>
               </div>
-            </div>
-            <q-separator />
-            <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-              Bien inmueble 2 (Casas, Apartamentos, Lotes, Fincas)
-            </div>
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.tipo_segundo_bien"
-                  label="Tipo"
-                  type="text"
-                />
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                Vehiculo 2 (Moto, Auto, Campero, Camioneta)
               </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.valor_segundo_bien"
-                  label="Valor comercial"
-                  type="number"
-                />
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.tipo_segundo_vehiculo"
+                    label="Tipo"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.valor_segundo_vehiculo"
+                    label="Valor comercial"
+                    type="number"
+                  />
+                </div>
+                <div class="col-12 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.marca_segundo_vehiculo"
+                    label="Marca / modelo"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.placa_segundo_vehiculo"
+                    label="Placa"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.saldo_segundo_vehiculo"
+                    label="Saldo del crédito"
+                    type="number"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.prenda_segundo_vehiculo"
+                    label="Prenda a favor"
+                    type="text"
+                  />
+                </div>
               </div>
-              <div class="col-12 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.direccion_segundo_bien"
-                  label="Dirección"
-                  type="text"
-                />
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                Otros Bienes 1 (Describir inversiones, acciones, bonos, maquinaria, semovientes)
               </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.hipoteca_segundo_bien"
-                  label="Hipotecado a"
-                  type="text"
-                />
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.descripcion_primer_otrobien"
+                    label="Descripción"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.valor_primer_otrobien"
+                    label="Valor comercial"
+                    type="number"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.saldo_primer_otrobien"
+                    label="Saldo del crédito"
+                    type="number"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.prenda_primer_otrobien"
+                    label="Prenda a favor"
+                    type="text"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-sm q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.saldo_segundo_bien"
-                  label="Saldo del crédito"
-                  type="number"
-                />
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                Otros Bienes 2 (Describir inversiones, acciones, bonos, maquinaria, semovientes)
               </div>
-            </div>
-            <q-separator />
-            <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-              Vehiculo 1 (Moto, Auto, Campero, Camioneta)
-            </div>
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.tipo_primer_vehiculo"
-                  label="Tipo"
-                  type="text"
-                />
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.descripcion_segundo_otrobien"
+                    label="Descripción"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.valor_segundo_otrobien"
+                    label="Valor comercial"
+                    type="number"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.saldo_segundo_otrobien"
+                    label="Saldo del crédito"
+                    type="number"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form3.prenda_segundo_otrobien"
+                    label="Prenda a favor"
+                    type="text"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.valor_primer_vehiculo"
-                  label="Valor comercial"
-                  type="number"
-                />
-              </div>
-              <div class="col-12 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.marca_primer_vehiculo"
-                  label="Marca / modelo"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.placa_primer_vehiculo"
-                  label="Placa"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-sm q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.saldo_primer_vehiculo"
-                  label="Saldo del crédito"
-                  type="number"
-                />
-              </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.prenda_primer_vehiculo"
-                  label="Prenda a favor"
-                  type="text"
-                />
-              </div>
-            </div>
-            <q-separator />
-            <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-              Vehiculo 2 (Moto, Auto, Campero, Camioneta)
-            </div>
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.tipo_segundo_vehiculo"
-                  label="Tipo"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.valor_segundo_vehiculo"
-                  label="Valor comercial"
-                  type="number"
-                />
-              </div>
-              <div class="col-12 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.marca_segundo_vehiculo"
-                  label="Marca / modelo"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.placa_segundo_vehiculo"
-                  label="Placa"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-sm q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.saldo_segundo_vehiculo"
-                  label="Saldo del crédito"
-                  type="number"
-                />
-              </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.prenda_segundo_vehiculo"
-                  label="Prenda a favor"
-                  type="text"
-                />
-              </div>
-            </div>
-            <q-separator />
-            <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-              Otros Bienes 1 (Describir inversiones, acciones, bonos, maquinaria, semovientes)
-            </div>
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.descripcion_primer_otrobien"
-                  label="Descripción"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.valor_primer_otrobien"
-                  label="Valor comercial"
-                  type="number"
-                />
-              </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.saldo_primer_otrobien"
-                  label="Saldo del crédito"
-                  type="number"
-                />
-              </div>
-              <div class="col-6 q-pl-sm q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.prenda_primer_otrobien"
-                  label="Prenda a favor"
-                  type="text"
-                />
-              </div>
-            </div>
-            <q-separator />
-            <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-              Otros Bienes 2 (Describir inversiones, acciones, bonos, maquinaria, semovientes)
-            </div>
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.descripcion_segundo_otrobien"
-                  label="Descripción"
-                  type="text"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.valor_segundo_otrobien"
-                  label="Valor comercial"
-                  type="number"
-                />
-              </div>
-              <div class="col-6 q-pl-none q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.saldo_segundo_otrobien"
-                  label="Saldo del crédito"
-                  type="number"
-                />
-              </div>
-              <div class="col-6 q-pl-sm q-mt-md text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form3.prenda_segundo_otrobien"
-                  label="Prenda a favor"
-                  type="text"
-                />
-              </div>
-            </div>
+            </template>
           </q-form>
+          <div else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
+            Según la fecha de nacimiento estás completando información de un progresandito de
+            {{ edad }} años. Esta sección no es obligatoria, continua con la sigueinte sección.
+          </div>
           <q-stepper-navigation class="q-pa-sm text-right">
             <q-btn @click="step--" label="Atrás" color="grey" rounded class="q-mr-sm" />
             <q-btn @click="validateStep(3)" label="Siguiente" color="primary" rounded />
@@ -2570,7 +2590,7 @@
             </div>
             <div class="row text-center">
               <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-                Operaciones extranjeras?
+                Manejas operaciones extranjeras?
               </div>
               <div class="col-6 q-pl-none text-center">
                 <q-select
