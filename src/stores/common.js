@@ -89,6 +89,25 @@ export const useCommonStore = defineStore('common', {
         }
       }
     },
+    async completeDataUser(payload) {
+      try {
+        this.status = true
+        const response = await commonApi.completeDataUser(payload)
+        this.responseMessages = response.data.message
+      } catch (error) {
+        this.status = false
+        if (error.message !== 'Network Error') {
+          this.responseMessages = error.response.data.message
+        } else {
+          this.responseMessages = [
+            {
+              text: 'Error de red',
+              detail: 'Intente conectarse a otra red de internet',
+            },
+          ]
+        }
+      }
+    },
     async completeDataSaac(payload) {
       try {
         this.status = true

@@ -9,6 +9,8 @@ export default {
 
   completeDataSaac: (data) => api.post('/new/complete-data-saac', data),
 
+  completeDataUser: (data) => api.put(`/user/complete-data/${data.id}`, data),
+
   signOut: (data) => api.post('/auth/logout', data),
 
   getCompanies: () => api.get('/company'),

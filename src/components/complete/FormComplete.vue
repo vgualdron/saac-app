@@ -157,7 +157,12 @@
                   label="Fecha Expedición *"
                   type="date"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  :rules="[
+                    (val) =>
+                      edad < 18 ||
+                      (val && val.length > 0) ||
+                      'Obligatorio si la edad es menor de 18 años',
+                  ]"
                 />
               </div>
               <div class="col-7 q-pl-sm text-center">
@@ -206,7 +211,7 @@
                   option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
+                  :rules="[(val) => !!val || 'Obligatorio']"
                 >
                   <template v-slot:selected-item="scope">
                     <span>
@@ -307,7 +312,7 @@
                   option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
+                  :rules="[(val) => !!val || 'Obligatorio']"
                 >
                   <template v-slot:selected-item="scope">
                     <span>
@@ -557,7 +562,7 @@
                   transition-show="flip-up"
                   transition-hide="flip-down"
                   v-model="form1.dpto"
-                  label="Departamento recidencia *"
+                  label="Departamento residencia *"
                   input-debounce="0"
                   :options="optionsDepartments"
                   option-value="id"
@@ -594,7 +599,7 @@
                   option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
+                  :rules="[(val) => !!val || 'Obligatorio']"
                 >
                   <template v-slot:selected-item="scope">
                     <span>
@@ -620,7 +625,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-input
                   dense
                   rounded
@@ -632,7 +637,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-input
                   dense
                   rounded
@@ -749,7 +754,7 @@
                   :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 />
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-select
                   dense
                   rounded
@@ -778,7 +783,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-select
                   dense
                   rounded
@@ -807,7 +812,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-select
                   dense
                   rounded
@@ -836,7 +841,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-select
                   dense
                   rounded
@@ -865,7 +870,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-none text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-none text-center">
                 <q-select
                   dense
                   rounded
@@ -894,7 +899,7 @@
                 >
                 </q-select>
               </div>
-              <div class="col-6 q-pl-sm text-center">
+              <div v-if="edad >= 18" class="col-6 q-pl-sm text-center">
                 <q-select
                   dense
                   rounded
@@ -1364,7 +1369,7 @@
                   option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => val || 'Obligatorio']"
+                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
                 >
                   <template v-slot:selected-item="scope">
                     <span>
@@ -1675,9 +1680,9 @@
                 />
               </div>
             </div>
-            <div else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
+            <div v-else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
               Según la fecha de nacimiento estás completando información de un progresandito de
-              {{ edad }} años. Esta sección no es obligatoria, continua con la sigueinte sección.
+              {{ edad }} años. Esta sección no es obligatoria, continua con la siguiente sección.
             </div>
           </q-form>
           <q-stepper-navigation class="q-pa-sm text-right">
@@ -2029,11 +2034,11 @@
                 </div>
               </div>
             </template>
+            <div v-else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
+              Según la fecha de nacimiento estás completando información de un progresandito de
+              {{ edad }} años. Esta sección no es obligatoria, continua con la siguiente sección.
+            </div>
           </q-form>
-          <div else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
-            Según la fecha de nacimiento estás completando información de un progresandito de
-            {{ edad }} años. Esta sección no es obligatoria, continua con la sigueinte sección.
-          </div>
           <q-stepper-navigation class="q-pa-sm text-right">
             <q-btn @click="step--" label="Atrás" color="grey" rounded class="q-mr-sm" />
             <q-btn @click="validateStep(3)" label="Siguiente" color="primary" rounded />
@@ -2043,703 +2048,726 @@
         <!-- Paso 4: conocimiento mejorado de personas -->
         <q-step :name="4" title="Conocimiento mejorado de personas" icon="looks_4" :done="step > 4">
           <q-form ref="formStep4" class="q-gutter-md">
-            <div class="row text-center">
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.politica_expuesta"
-                  label="¿Política expuesta?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
+            <template v-if="edad >= 18">
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.politica_expuesta"
+                    label="¿Política expuesta?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_politica_expuesta"
+                    label="Indique politica expuesta"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.politica_expuesta === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.representa_ong"
+                    label="¿Representa ONG?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_representa_ong"
+                    label="Indique representa ONG"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.representa_ong === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.persona_publica"
+                    label="¿Persona pública?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_persona_publica"
+                    label="Indique persona pública"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.persona_publica === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.movimiento_politico"
+                    label="¿Movimiento politico?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_movimiento_politico"
+                    label="Indique movimiento politico"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.movimiento_politico === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.administra_publico"
+                    label="¿Administra público?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_administra_publico"
+                    label="Indique administra público"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.administra_publico === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.tributa_otro_pais"
+                    label="¿Tributa otro país?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_tributa_otro_pais"
+                    label="Indique tributa otro país"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.tributa_otro_pais === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.vinculo_pep"
+                    label="¿Vínculo PEP?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.indique_vinculo_pep"
+                    label="Indique vínculo PEP"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_politica_expuesta"
-                  label="Indique politica expuesta"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.politica_expuesta === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
+              <q-separator />
+              <div class="row text-center">
+                <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                  Información sobre los vinculo 1 PEP
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.vinculo1"
+                    label="Vínculo"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.nombre_vinculo1"
+                    label="Nombre"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.tipodoc_vinculo1"
+                    label="Tipo de identificación"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.numero_vinculo1"
+                    label="Número de identificación"
+                    type="number"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.nacionalidad_vinculo1"
+                    label="Nacionalidad"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.entidad_vinculo1"
+                    label="Entidad"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.cargo_vinculo1"
+                    label="Cargo"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.fecha_vinculo1"
+                    label="Fecha de vínculo"
+                    type="date"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.representa_ong"
-                  label="¿Representa ONG?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
+              <q-separator />
+              <div class="row text-center">
+                <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                  Información sobre los vinculo 2 PEP
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.vinculo2"
+                    label="Vínculo"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.nombre_vinculo2"
+                    label="Nombre"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.tipodoc_vinculo2"
+                    label="Tipo de identificación"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.numero_vinculo2"
+                    label="Número de identificación"
+                    type="number"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.nacionalidad_vinculo2"
+                    label="Nacionalidad"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.entidad_vinculo2"
+                    label="Entidad"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.cargo_vinculo2"
+                    label="Cargo"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.fecha_vinculo2"
+                    label="Fecha de vínculo"
+                    type="date"
+                    :rules="[
+                      (val) =>
+                        (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_representa_ong"
-                  label="Indique representa ONG"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.representa_ong === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
+              <div class="row text-center">
+                <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
+                  Manejas operaciones extranjeras?
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.operaciones_extranjeras"
+                    label="¿Operaciones extranjeras?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.tipo_operaciones"
+                    label="Tipo de operaciones"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.operaciones_extranjeras === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-5 q-pl-none text-center">
+                  <q-select
+                    dense
+                    rounded
+                    outlined
+                    emit-value
+                    transition-show="flip-up"
+                    transition-hide="flip-down"
+                    v-model="form4.cuentas_extranjeras"
+                    label="¿Cuentas extranjeras?"
+                    input-debounce="0"
+                    :options="[
+                      {
+                        id: 'Si',
+                        name: 'Si',
+                      },
+                      {
+                        id: 'No',
+                        name: 'No',
+                      },
+                    ]"
+                    option-value="id"
+                    option-label="name"
+                    behavior="menu"
+                    reactive-rules
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  >
+                  </q-select>
+                </div>
+                <div class="col-7 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.numero_cuenta"
+                    label="Número de cuenta"
+                    type="number"
+                    :rules="[
+                      (val) =>
+                        (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.moneda"
+                    label="Moneda"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.monto"
+                    label="Monto promedio"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.ciudad_operaciones"
+                    label="Ciudad de operaciones"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form4.pais"
+                    label="País de opereaciones"
+                    type="text"
+                    :rules="[
+                      (val) =>
+                        (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
+                        'Obligatorio',
+                    ]"
+                  />
+                </div>
               </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.persona_publica"
-                  label="¿Persona pública?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_persona_publica"
-                  label="Indique persona pública"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.persona_publica === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.movimiento_politico"
-                  label="¿Movimiento politico?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_movimiento_politico"
-                  label="Indique movimiento politico"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.movimiento_politico === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.administra_publico"
-                  label="¿Administra público?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_administra_publico"
-                  label="Indique administra público"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.administra_publico === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.tributa_otro_pais"
-                  label="¿Tributa otro país?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_tributa_otro_pais"
-                  label="Indique tributa otro país"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.tributa_otro_pais === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.vinculo_pep"
-                  label="¿Vínculo PEP?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.indique_vinculo_pep"
-                  label="Indique vínculo PEP"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-            </div>
-            <q-separator />
-            <div class="row text-center">
-              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-                Información sobre los viculo 1 PEP
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.vinculo1"
-                  label="Vínculo"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.nombre_vinculo1"
-                  label="Nombre"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.tipodoc_vinculo1"
-                  label="Tipo de identificación"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.numero_vinculo1"
-                  label="Número de identificación"
-                  type="number"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.nacionalidad_vinculo1"
-                  label="Nacionalidad"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.entidad_vinculo1"
-                  label="Entidad"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.cargo_vinculo1"
-                  label="Cargo"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.fecha_vinculo1"
-                  label="Fecha de vínculo"
-                  type="date"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-            </div>
-            <q-separator />
-            <div class="row text-center">
-              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-                Información sobre los viculo 2 PEP
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.vinculo2"
-                  label="Vínculo"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.nombre_vinculo2"
-                  label="Nombre"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.tipodoc_vinculo2"
-                  label="Tipo de identificación"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.numero_vinculo2"
-                  label="Número de identificación"
-                  type="number"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.nacionalidad_vinculo2"
-                  label="Nacionalidad"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.entidad_vinculo2"
-                  label="Entidad"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.cargo_vinculo2"
-                  label="Cargo"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.fecha_vinculo2"
-                  label="Fecha de vínculo"
-                  type="date"
-                  :rules="[
-                    (val) =>
-                      (form4.vinculo_pep === 'Si' ? val && val.length > 0 : true) || 'Obligatorio',
-                  ]"
-                />
-              </div>
-            </div>
-            <div class="row text-center">
-              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-sm">
-                Manejas operaciones extranjeras?
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.operaciones_extranjeras"
-                  label="¿Operaciones extranjeras?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.tipo_operaciones"
-                  label="Tipo de operaciones"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.operaciones_extranjeras === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-5 q-pl-none text-center">
-                <q-select
-                  dense
-                  rounded
-                  outlined
-                  emit-value
-                  transition-show="flip-up"
-                  transition-hide="flip-down"
-                  v-model="form4.cuentas_extranjeras"
-                  label="¿Cuentas extranjeras?"
-                  input-debounce="0"
-                  :options="[
-                    {
-                      id: 'Si',
-                      name: 'Si',
-                    },
-                    {
-                      id: 'No',
-                      name: 'No',
-                    },
-                  ]"
-                  option-value="id"
-                  option-label="name"
-                  behavior="menu"
-                  reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-                >
-                </q-select>
-              </div>
-              <div class="col-7 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.numero_cuenta"
-                  label="Número de cuenta"
-                  type="number"
-                  :rules="[
-                    (val) =>
-                      (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.moneda"
-                  label="Moneda"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.monto"
-                  label="Monto promedio"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-none text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.ciudad_operaciones"
-                  label="Ciudad de operaciones"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
-              <div class="col-6 q-pl-sm text-center">
-                <q-input
-                  dense
-                  rounded
-                  outlined
-                  v-model="form4.pais"
-                  label="País de opereaciones"
-                  type="text"
-                  :rules="[
-                    (val) =>
-                      (form4.cuentas_extranjeras === 'Si' ? val && val.length > 0 : true) ||
-                      'Obligatorio',
-                  ]"
-                />
-              </div>
+            </template>
+            <div v-else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
+              Según la fecha de nacimiento estás completando información de un progresandito de
+              {{ edad }} años. Esta sección no es obligatoria, continua con la siguiente sección.
             </div>
           </q-form>
           <q-stepper-navigation class="q-pa-sm text-right">
@@ -2751,16 +2779,422 @@
         <!-- Paso 5: Referencias -->
         <q-step :name="5" title="Referencias y beneficiarios" icon="looks_5" :done="step > 5">
           <q-form ref="formStep5" class="q-gutter-md">
-            <q-input
-              v-model="form5.item"
-              label="Nombre de Referencia"
-              outlined
-              :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
-            />
+            <template v-if="edad >= 18">
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Información de referencia personal 1
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_nombre1"
+                    label="Nombre *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_relacion1"
+                    label="Relación *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-12 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_direccion1"
+                    label="Dirección *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_ciudad1"
+                    label="Ciudad *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_telefono1"
+                    label="Teléfono *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+              </div>
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Información de referencia personal 2
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_nombre2"
+                    label="Nombre *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_relacion2"
+                    label="Relación *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-12 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_direccion2"
+                    label="Dirección *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_ciudad2"
+                    label="Ciudad *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciap_telefono2"
+                    label="Teléfono *"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+              </div>
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Información de referencia comercial 1 (opcional)
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_entidad1"
+                    label="Entidad"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_tipo1"
+                    label="Tipo de producto"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_producto1"
+                    label="No. producto"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_ciudad1"
+                    label="Ciudad"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_telefono1"
+                    label="Teléfono"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Información de referencia comercial 2 (opcional)
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_entidad2"
+                    label="Entidad"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_tipo2"
+                    label="Tipo de producto"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_producto2"
+                    label="No. producto"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_ciudad2"
+                    label="Ciudad"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.referenciac_telefono2"
+                    label="Teléfono"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Beneficiario en caso de fallecimiento 1
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_nombre1"
+                    label="Nombre"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_documento1"
+                    label="No. Documento"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_porcentaje1"
+                    label="Porcentaje"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_nacimiento1"
+                    label="Fecha de nacimiento"
+                    type="date"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_parentesco1"
+                    label="Parentesco"
+                    type="text"
+                    :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  />
+                </div>
+              </div>
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Beneficiario en caso de fallecimiento 2
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_nombre2"
+                    label="Nombre"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_documento2"
+                    label="No. Documento"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_porcentaje2"
+                    label="Porcentaje"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_nacimiento2"
+                    label="Fecha de nacimiento"
+                    type="date"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_parentesco2"
+                    label="Parentesco"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <q-separator />
+              <div class="text-subtitle2 text-weight-bold text-grey text-center q-mb-none">
+                Beneficiario en caso de fallecimiento 3
+              </div>
+              <div class="row text-center">
+                <div class="col-6 q-pl-none text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_nombre3"
+                    label="Nombre"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_documento3"
+                    label="No. Documento"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_porcentaje3"
+                    label="Porcentaje"
+                    type="text"
+                  />
+                </div>
+                <div class="col-6 q-pl-sm q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_nacimiento3"
+                    label="Fecha de nacimiento"
+                    type="date"
+                  />
+                </div>
+                <div class="col-6 q-pl-none q-mt-md text-center">
+                  <q-input
+                    dense
+                    rounded
+                    outlined
+                    v-model="form5.beneficiario_parentesco3"
+                    label="Parentesco"
+                    type="text"
+                  />
+                </div>
+              </div>
+            </template>
+            <div v-else class="text-subtitle2 text-weight-bold text-blue text-center q-mb-sm">
+              Según la fecha de nacimiento estás completando información de un progresandito de
+              {{ edad }} años. Esta sección no es obligatoria, continua con la siguiente sección.
+            </div>
           </q-form>
           <q-stepper-navigation class="q-pa-sm text-right">
-            <q-btn @click="step--" label="Atrás" color="grey" flat class="q-mr-sm" />
-            <q-btn @click="validateStep(5)" label="Siguiente" color="primary" />
+            <q-btn @click="step--" label="Atrás" color="grey" rounded class="q-mr-sm" />
+            <q-btn @click="validateStep(5)" label="Siguiente" rounded color="primary" />
           </q-stepper-navigation>
         </q-step>
 
@@ -2777,7 +3211,9 @@
                   label="Aporte voluntario"
                   type="number"
                   reactive-rules
-                  :rules="[(val) => (val && val > 0) || 'Obligatorio']"
+                  :rules="[
+                    (val) => (val !== null && val !== undefined && val !== '') || 'Obligatorio',
+                  ]"
                 />
               </div>
               <div class="col-6 q-pl-sm text-center">
@@ -3217,16 +3653,53 @@ const form4 = reactive({
   ciudad_operaciones: '',
   pais: '',
 })
-const form5 = reactive({ item: '' })
+
+const form5 = reactive({
+  referenciap_nombre1: '',
+  referenciap_relacion1: '',
+  referenciap_direccion1: '',
+  referenciap_ciudad1: '',
+  referenciap_telefono1: '',
+  referenciap_nombre2: '',
+  referenciap_relacion2: '',
+  referenciap_direccion2: '',
+  referenciap_ciudad2: '',
+  referenciap_telefono2: '',
+  referenciac_entidad1: '',
+  referenciac_tipo1: '',
+  referenciac_producto1: '',
+  referenciac_ciudad1: '',
+  referenciac_telefono1: '',
+  referenciac_entidad2: '',
+  referenciac_tipo2: '',
+  referenciac_producto2: '',
+  referenciac_ciudad2: '',
+  referenciac_telefono2: '',
+  beneficiario_nombre1: '',
+  beneficiario_documento1: '',
+  beneficiario_porcentaje1: '',
+  beneficiario_nacimiento1: '',
+  beneficiario_parentesco1: '',
+  beneficiario_nombre2: '',
+  beneficiario_documento2: '',
+  beneficiario_porcentaje2: '',
+  beneficiario_nacimiento2: '',
+  beneficiario_parentesco2: '',
+  beneficiario_nombre3: '',
+  beneficiario_documento3: '',
+  beneficiario_porcentaje3: '',
+  beneficiario_nacimiento3: '',
+  beneficiario_parentesco3: '',
+})
 
 const form6 = reactive({
-  aporte_voluntario: novel.value.contribution,
+  aporte_voluntario: edad.value >= 18 ? novel.value.contribution : 0,
   aporte_vivienda: 0,
   aporte_vehiculo: 0,
   aporte_microempresa: 0,
   aporte_vista: 0,
   aporte_programado: 0,
-  aporte_progresandito: 0,
+  aporte_progresandito: edad.value < 18 ? novel.value.contribution : 0,
   aporte_extraordinario: 0,
   aporte_fijo: 0,
   aporte_fundador: 0,
@@ -3273,16 +3746,16 @@ watch(
 )
 
 watch(
-  () => form1.department_id,
+  () => form1.dpto_nacimiento,
   () => {
-    form1.city_id = ''
+    form1.lugar_nacimiento = ''
   },
 )
 
 watch(
-  () => form1.department_house,
+  () => form1.dpto,
   () => {
-    form1.city_house = ''
+    form1.ciudad = ''
   },
 )
 
@@ -3304,6 +3777,7 @@ const onSubmit = async () => {
   data.economicas = { ...form2 }
   data.activos = { ...form3 }
   data.conocimientos = { ...form4 }
+  data.referencias = { ...form5 }
   data.aportes = [
     {
       linea_aporte_id: 1,
@@ -3346,6 +3820,7 @@ const onSubmit = async () => {
 
   if (commonStore.status) {
     commonStore.setCompleteData(commonStore.status)
+    await commonStore.completeDataUser({ id: user.value?.user_id, completedFields: 1 })
     // PONER QUE SE CAMBIE EL VALOR DEL CAMPO. USERS.COMPLETED_FIELDS, en update_user
     router.push('/')
   }
