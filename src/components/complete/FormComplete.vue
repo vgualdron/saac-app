@@ -263,7 +263,11 @@
                   label="Fecha nacimiento *"
                   type="date"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  :rules="[
+                    (val) =>
+                      (val && val !== '0000-00-00' && val !== '0000-00-00 00:00:00') ||
+                      'La fecha es obligatoria',
+                  ]"
                 />
               </div>
               <div class="col-6 q-pl-sm text-center">
@@ -1369,7 +1373,7 @@
                   option-label="name"
                   behavior="menu"
                   reactive-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Obligatorio']"
+                  :rules="[(val) => !!val || 'Obligatorio']"
                 >
                   <template v-slot:selected-item="scope">
                     <span>
@@ -3767,6 +3771,13 @@ watch(
     } else {
       form2.empresa = ''
     }
+  },
+)
+
+watch(
+  () => form2.dpto_empresa,
+  () => {
+    form2.ciudad_empresa = ''
   },
 )
 

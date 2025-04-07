@@ -134,6 +134,14 @@ const columns = [
     field: (row) => row.description,
     sortable: true,
   },
+  {
+    name: 'observation',
+    required: true,
+    label: 'Observación',
+    align: 'left',
+    field: (row) => row.observation,
+    sortable: true,
+  },
 ]
 </script>
 <style scoped></style>
